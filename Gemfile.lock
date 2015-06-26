@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    doc_helpers (0.1.0.pre1)
+    origen_doc_helpers (0.1.0.pre1)
       origen (>= 0.0.5)
 
 GEM
@@ -132,4 +132,4 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  doc_helpers!
+  origen_doc_helpers!

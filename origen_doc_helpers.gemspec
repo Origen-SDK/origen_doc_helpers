@@ -3,7 +3,7 @@ config = File.expand_path('../config', __FILE__)
 require "#{config}/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "doc_helpers"
+  spec.name          = "origen_doc_helpers"
   spec.version       = OrigenDocHelpers::VERSION
   spec.authors       = ["Stephen McGinty"]
   spec.email         = ["stephen.f.mcginty@gmail.com"]
