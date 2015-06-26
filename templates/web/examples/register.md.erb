@@ -1,0 +1,101 @@
+% render "../layouts/examples.html" do
+
+# Register Helpers
+
+Use the [Origen register API](http://origen-sdk.org/origen/guides/models/registers)
+to define registers in the normal way,
+all of the examples are here are based on this register definition:
+
+~~~ruby
+# **The Long Name of the Reg**
+#
+# The MCLKDIV register is used to divide down the frequency of the HBOSCCLK input. If the MCLKDIV
+# register is set to value "N", then the output (beat) frequency of the clock divider is OSCCLK / (N+1). The
+# resulting beats are, in turn, counted by the PTIMER module to control the duration of Flash high-voltage
+# operations.
+#
+# This is just a test that paragraphs work.
+add_reg :mclkdiv, 0x0003, :size => 16 do
+  # **Oscillator (Hi)** - Firmware FMU clock source selection. (Note that in addition to this firmware-controlled bit, the
+  # FMU clock source is also dependent on test and power control discretes).
+  #
+  # 0 | FMU clock is the externally supplied bus clock ipg_clk
+  # 1 | FMU clock is the internal oscillator from the TFS hardblock
+  bit 15, :osch, :reset => 1
+  # **Mode Ready** - A Synchronized version of the *ftf_mode_ready[1:0]* output from the flash analog hard block.
+  # See the TFL3 Hard Block Creation Guide for more details.
+  #
+  # 0 | Analog voltages have not reached target levels for the specified mode of operation
+  # 1 | Analog voltages have reached target levels for the specified mode of operation
+  bit 13..12, :mode_rdy, :writable => false
+  # **IFR and FW ECC Enable for LDM** - On / off control for UIFR, RIFR, and FW when reading with the MGATE's
+  # Load Memory (LDM) instruction. The setting of this bit only makes a difference when reading with LDM, all other
+  # MGATE reads from UIFR/RIFR will always have ECC disabled and reads from FW will have ECC enabled.
+  #
+  # 0 | ECC is disabled for UIFR, RIFR, and FW reads when using the LDM instruction
+  # 1 | ECC is enabled for all UIFR, RIFR, and FW reads when using the LDM instruction
+  bit 10, :eccen, :reset => 1
+  # **MGATE Command Location Code** - A 2-bit code that tells the MGATE where to go for its instruction fetches
+  # (location of command definitions). These bits are used to form different MGATE command request IDs from a
+  # falling CCIF, one request ID for each of the possible locations of the MGATE executable. If this field is changed,
+  # all subsequent command launches (falling CCIF) will execute from the new area. Note that the MGATE also has
+  # a reset request ID. The reset request ID always targets the Boot Code and is unaffected by the CMDLOC setting.
+  #
+  # 00 | Execute from the Beginning of the MGRAM + 256B (the normal location)
+  # 01 | Execute from the Beginning of the MGRAM
+  # 10 | Execute from the Stack start at the end of MGRAM
+  # 11 | Reserved
+  bit 9..7, :cmdloc, :reset => :undefined
+  # **Clock Divider Bits** - DIV[7:0] must be set to effectively divide HBOSCCLK down to a known beat frequency
+  # having acceptable resolution and dynamic range for timing high-voltage operations on the Flash hardblocks
+  # during algorithms with timed events. Table 1-50 shows the range of timed events (i.e. pulse widths) that can be
+  # achieved with 8-bit and 16-bit PTIMER loads for various input clock frequencies and clock divider settings.
+  bit 6..2, :div, :reset => :memory
+end
+~~~
+
+### Basic Register Diagram
+
+<%= render "templates/shared/register", :reg => $dut.reg(:mclkdiv) %>
+
+Here is an example of how to insert a basic register diagram in
+a document:
+
+~~~eruby
+## Register Map
+
+<%= "%" %> $dut.regs.each do |name, reg|
+
+<%= "<" + "%= render \"doc_helpers/register.html\", reg: reg, preserve_target: true %" + ">" %>
+
+<%= "%" %> end
+~~~
+
+### Register Diagram with Descriptions
+
+<%= render "templates/shared/register", :reg => $dut.reg(:mclkdiv), :descriptions => true %>
+
+Set the <code>:descriptions</code> switch to true to include the register and
+bit descriptions:
+
+~~~eruby
+## Register Map
+
+<%= "%" %> $dut.regs.each do |name, reg|
+
+<%= "<" + "%= render \"doc_helpers/register.html\", reg: reg, preserve_target: true, descriptions: true %" + ">" %>
+
+<%= "%" %> end
+~~~
+
+### Additional Test Cases
+
+<%= render "templates/shared/register", :reg => $dut.reg(:proth) %>
+
+<%= render "templates/shared/register", :reg => $dut.reg(:protl) %>
+
+% $dut.sub_module.regs.each do |name, reg|
+<%= render "templates/shared/register", :reg => reg, :descriptions => true %>
+% end
+
+% end

@@ -1,0 +1,28 @@
+% render "../layouts/examples.html" do
+
+# Yammer Widgets
+
+These helpers wrap the [Yammer Embed API](https://developer.yammer.com/connect/)
+which allows Yammer feeds to be embedded in any web page.
+
+The most useful application of this is to provide a comment stream which will be
+unique to each page, like the one you see below!
+
+To include comments simply add this to the bottom of any given page, or your
+layout file to add comments to every page:
+
+~~~eruby
+<%= "<" + "%= yammer_comments %" + ">" %>
+~~~
+
+The following options are available:
+
+~~~text
+:prompt   - Set what the prompt for new comments should be, 'Comment on this page' is the default
+:group_id - Specify a specific Yammer group ID, defaults to config.yammer_group in the application config, and if not defined falls back to the
+            Origen User's Group
+~~~
+
+<%= yammer_comments %>
+
+% end

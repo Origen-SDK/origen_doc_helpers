@@ -1,0 +1,128 @@
+% render "templates/web/layouts/doc.html", heading: "Creating Searchable Documents" do
+
+This helper provides a layout that will create a nested collection of
+documents like this one and which are searchable via the box on the 
+top left.
+
+%#It can also build a PDF representation of the document collection.
+
+### The Document Index
+
+The application must supply a hash to describe the page index that has been built
+on the the left of the page.
+Here is the index used for this page:
+
+~~~ruby
+index = {}
+index[nil] = {
+  intro: "Introduction",
+  page2: "Page 2",
+}
+index["Topic 1"] = {
+  topic1_item1: "First Item",
+  topic1_item2: "Second Item",
+}
+~~~
+
+The sub-hash keys describe where each document lives and what its title is, for example
+the document with title "Second Item" should live in <code>_documents_root_/topic1/item2.md.erb</code>.
+
+By default the root is <code>"#{Origen.root}/templates/web/docs"</code> but this can be overridden
+by supplying a <code>:root</code> option which should describe the relative path from <code>"#{Origen.root}/templates/web"</code>.
+
+### The Layout Helper
+
+A layout helper is provided to include a document in the search and wrap it
+with the indexed layout:
+
+~~~eruby
+<%= "%" %> render "doc_helpers/searchable.html", index: index do
+
+Blah blah blah
+
+<%= "%" %> end
+~~~
+
+The <code>:index</code> option is mandatory, but the following are optional:
+
+~~~text
+%#:pdf_title - PDF creation is enabled by providing a title via this option, e.g. "My Application Guides"
+:heading   - Each wrapped document will have the heading (e.g. "First Item") inserted at the top of the page,
+             to override it supply this option. A common example would be if the topic is long and
+             so an abbreviated version has been used in the index. e.g. "First Item and Other Stuff"
+:topic     - Each wrapped document will have the topic (e.g. "Topic 1") inserted at the top of the page,
+             to override it supply this option. A common example would be if the topic is long and
+             so an abbreviated version has been used in the index. e.g. "Topic 1 and Other Stuff"
+:root      - override the top-level folder containing your documents, e.g. "tutorials/guides"
+:tab       - the helper should automatically work out what tab to select for each document, however
+             if it is struggling for some reason you can force it by supplying the hash key from the
+             index that the given document should be associated with, e.g. :topic1_item1
+~~~
+
+### Incorporating in Your Own Layout
+
+Normally the searchable layout will be wrapped in your own application specific layout
+to insert your custom navigation bar, etc.
+
+As an example here is the actual layout that has been used to generate this page:
+
+
+~~~eruby
+---
+title: <%= options[:title] || Origen.config.name %>
+---
+<%= "<" + "%= render \"partials/navbar.html\", tab: :examples %" + ">" %>
+
+<%= "%" %> index = {}
+<%= "%" %> index[nil] = {
+<%= "%" %>   intro: "Introduction",
+<%= "%" %>   page2: "Page 2",
+<%= "%" %> }
+<%= "%" %> index["Topic 1"] = {
+<%= "%" %>   topic1_item1: "First Item",
+<%= "%" %>   topic1_item2: "Second Item",
+<%= "%" %> }
+
+%#<%= "%" %> opts = options.merge(index: index, root: "examples/searchable", pdf_title: "Doc Helpers Searchable Guide")
+<%= "%" %> opts = options.merge(index: index, root: "examples/searchable")
+<%= "%" %> render "doc_helpers/searchable.html", options.merge(opts) do
+
+<%= "<" + "%= yield %" + ">" %>
+
+<%= "%" %> end
+~~~
+
+%#### Enabling PDF Generation
+%#
+%#PDF generation is enabled by supplying the <code>:pdf_title</code> option when calling
+%#the <code>searchable.html</code> template as shown above.
+%#No other application-level configuration or setup is required.
+%#
+%#This will generate the PDF at web site deploy time and add the download link to
+%#the searchable document menu.
+%#
+%#PDF generation is currently only supported on Linux/CDE, the same restriction that applies
+%#to deploying a web site.
+
+### Writing Your Documents
+
+With the layout setup, writing documents is very simple; these should normally
+be regular markdown that is wrapped in your layout.
+
+The top-level header size in your document should be <code>h3</code> or <code>###</code> in markdown.
+
+<code>.html.erb</code> files will also work if you want to use them.
+
+Here is the actual code used behind the [Topic 1 - First Item](<%= path "examples/searchable/topic1/item1" %>)
+page (where the layout being rendered is the one above):
+
+
+~~~eruby
+<%= "%" %> render "templates/web/layouts/doc.html" do
+
+Hello I'm item 1
+
+<%= "%" %> end
+~~~
+
+% end

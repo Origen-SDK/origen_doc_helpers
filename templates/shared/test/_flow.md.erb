@@ -1,0 +1,227 @@
+%# This is a template to create a test flow document like this one:
+%#   http://origen.freescale.net/tfs/latest/flows/low_cost/sort1/
+% program = options[:program]
+% flows = options[:flow] || options[:flows] 
+% flows = flows ? [flows].flatten : nil
+
+<div class="row">
+%# The markdown attribute is important if you are going to include content written
+%# in markdown, without this is will be included verbatim
+%# One downside is that html cannot be indented here, otherwise it will be parsed
+%# as a code block.
+<div class="col-md-12" markdown="1">
+<div class="panel-group" id="test_flow">  
+
+<a href="#_" class="expandcollapse btn btn-xs pull-right btn-default" state="0"><i class='fa fa-plus'></i></a>
+
+<h2><%= options[:heading] %> <span style="font-size: 14px">(generated for target '<%= program.target %>')</span></h2>
+
+% program.each_in_flow(flows, :context => options[:context]) do |t|
+%   type = t[:type]
+%   instances = t[:instance]
+%   i = instances
+%   flow = t[:flow]
+%   f = flow
+%   context = t[:context]
+%   c = context
+%   description = t[:description]
+
+%   if type == :label || type == :branch
+%     # Need to decide how to deal with label based jumps
+
+%   elsif type == :section_start
+
+<%= _stop_test_flow_table %>
+<%= _start_accordion(description.first) %>
+
+%     description.each_with_index do |line, ix|
+%       unless ix == 0
+<%= line %>
+%       end
+%     end
+
+%   elsif type == :section_stop
+
+<%= _stop_test_flow_table %>
+<%= _stop_accordion %>
+
+%   else
+
+%     unless flow[:name] == "power_cycle_ti"
+<%= _start_test_flow_table %>
+
+<tr>
+<td class="col1">
+<a class="anchor" name="<%= "#{_test_name(t)}_#{_test_number(t)}" %>"></a>
+<div><%= _test_to_local_link(t) %></div>  
+
+% if f[:id]
+% dependents = program.dependents_of(f[:id], flows, :context => options[:context])
+%   unless dependents.empty?
+<div class="alert alert-info">
+%     if dependents[:if_failed]  
+  <p><strong>Note</strong>
+  - This test does not bin out as later tests are dependent on it.
+  </p>
+  <p>These tests will run if this test FAILS:
+  <ul>
+%       dependents[:if_failed].each do |dependent|
+  <li><%= _test_to_local_link(dependent) %></li>
+%       end 
+  </ul></p>
+%     end 
+%     if dependents[:if_passed]  
+  <p><strong>Note</strong>
+  - This test does not bin out as later tests are dependent on it.
+  </p>
+  <p>These tests will run if this test PASSES:
+  <ul>
+%       dependents[:if_passed].each do |dependent|
+  <li><%= _test_to_local_link(dependent) %></li>
+%       end 
+  </ul></p>
+%     end 
+%     if dependents[:if_ran]  
+  <p><strong>Note</strong> - These tests will run if this test RUNS:
+  <ul>
+  <ul>
+%       dependents[:if_ran].each do |dependent|
+  <li><%= _test_to_local_link(dependent) %></li>
+%       end 
+  </ul></p>
+%     end 
+%     if dependents[:unless_ran]  
+  <p><strong>Note</strong> - These tests will run if this test DOES NOT RUN:
+  <ul>
+%       dependents[:unless_ran].each do |dependent|
+  <li><%= _test_to_local_link(dependent) %></li>
+%       end 
+  </ul></p>
+%     end 
+</div>
+%   end
+% end
+
+% if c[:if_enable]
+<div class="alert alert-success">
+  <strong>Note</strong>
+  - This test will only run when '<%= c[:if_enable] %>' is enabled.
+</div>
+% end
+
+% if c[:unless_enable]
+<div class="alert alert-success">
+  <strong>Note</strong>
+  - This test will NOT run when '<%= c[:unless_enable] %>' is enabled.
+</div>
+% end
+
+% if f[:continue]
+<div class="alert alert-danger">
+  <strong>Warning!</strong>
+  - This test does not bin out when failed.
+</div>
+% end
+
+% if c[:if_passed]
+<div class="alert alert-success">
+  <p><strong>Note</strong>
+  - This test will only run if this test PASSED:
+  <ul><li><%= _test_to_local_link(program.find_by_id(c[:if_passed], flows, :context => options[:context])) %></li></ul>
+  </p>
+</div>
+% end
+
+% if c[:if_failed]
+<div class="alert alert-success">
+  <p><strong>Note</strong>
+  - This test will only run if this test FAILED:
+  <ul><li><%= _test_to_local_link(program.find_by_id(c[:if_failed], flows, :context => options[:context])) %></li></ul>
+  </p>
+</div>
+% end
+
+% if c[:if_ran]
+<div class="alert alert-success">
+  <p><strong>Note</strong>
+  - This test will only run if this test RAN:
+  <ul><li><%= _test_to_local_link(program.find_by_id(c[:if_ran], flows, :context => options[:context])) %></li></ul>
+  </p>
+</div>
+% end
+
+% if c[:unless_ran]
+<div class="alert alert-success">
+  <p><strong>Note</strong>
+  - This test will only run if this test DID NOT RUN:
+  <ul><li><%= _test_to_local_link(program.find_by_id(c[:unless_ran], flows, :context => options[:context])) %></li></ul>
+  </p>
+</div>
+% end
+
+
+</td>
+<td class="col2">#<%= _test_number(t) %></td>
+<td class="col3">B<%= _bin_number(t) %></td>
+<td class="col4">B<%= _sbin_number(t) %></td>
+<td class="col5 attributes" markdown="1">
+
+% instances.each_with_index do |instance, i|
+%   if i > 0
+
+***
+
+%   end
+%   instance.each do |key, val|
+%     unless [:patterns, :pattern, :by_block, :name, :id].include?(key)
+%#       if val.is_a?(Numeric)
+%#         if val > 1000000
+%#           val = 
+%#         if val > 1000000
+%#       end
+* **<%= key.to_s.capitalize.gsub("_", " ") %>**: <%= val %>
+%     end
+%   end
+%   patterns = [instance[:pattern], instance[:patterns]].flatten.compact
+%   unless patterns.empty?
+%     if options[:link_to_pattern_docs]
+
+<div class="pattern-links">
+%       patterns.each_with_index do |pattern, i|
+%         if patterns.size > 1
+%         txt = "Pattern #{i}"
+%         else
+%         txt = "Pattern"
+%         end
+<a href="<%= path "/patterns/#{pattern}" %>" role="button" class="btn btn-primary btn-small"><%= txt %></a>
+%       end
+</div>
+%     else
+* **Patterns**:
+%       patterns.each_with_index do |pattern, i|
+  * <%= pattern %>
+%       end
+
+%     end
+%     
+%   end
+% end
+</td>
+
+<td class="col6" markdown="1">
+
+%     description.each do |line|
+<%= line %>
+%     end
+
+</td>
+</tr>
+%   end              
+% end
+% end
+
+<%= _stop_test_flow_table %>
+
+</div>
+</div>
+</div>

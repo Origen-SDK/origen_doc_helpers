@@ -1,0 +1,207 @@
+% reg = options[:reg]
+% include_data = false
+
+<div class="register">
+<a class="anchor" name="<%= "#{reg.name}" %>"></a>
+
+<a href='#<%= reg.name %>'>
+% if reg.full_name
+<h4>0x<%= reg.address.to_s(16).upcase %> - <%= reg.full_name %> (<%= reg.name %>)</h4>
+% else
+<h4>0x<%= reg.address.to_s(16).upcase %> - <%= reg.name %></h4>
+% end
+</a>
+
+% if options[:descriptions]
+<div markdown="1" style="margin: 0 0 20px 0">
+
+% reg.description(:include_name => false).each do |line|
+<%= line.gsub("\\'", "'") %>
+% end
+
+</div>
+% end
+
+% (reg.size / 8).times do |byte_index|
+%   # Need to add support for little endian regs here?
+%   byte_number = (reg.size / 8) - byte_index
+%   max_bit = reg.size - (byte_index * 8) - 1
+%   min_bit = max_bit - 8 + 1
+
+<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+  <thead>
+    <tr class="bit-positions">
+      <th class="spacer"></th>
+% 8.times do |i|
+      <th class="bit-position"><%= reg.size - i - 1 - (byte_index * 8) %></th>
+% end
+    </tr>
+  </thead>
+  <tbody>
+
+%#############################################    
+%#  Read Row
+%#############################################    
+    <tr class="read">
+      <td class="heading">R</td>
+% reg.named_bits :include_spacers => true do |name, bit|
+%  if _bit_in_range?(bit, max_bit, min_bit)
+%   if bit.size > 1
+%     if name
+%       if bit.readable?
+%         bit_name = "#{name}[#{bit.size - 1}:0]"
+      <td class="<%= _bit_rw(bit) %>" colspan="<%= _num_bits_in_range(bit, max_bit, min_bit) %>">
+         <span><%= bit_name %></span>
+      </td>
+%       else
+%         if bit.access == :worz
+      <td class="<%= _bit_rw(bit) %>" colspan="<%= _num_bits_in_range(bit, max_bit, min_bit) %>">
+         <span>0</span>
+      </td>
+%         else
+      <td class="<%= _bit_rw(bit) %>" colspan="<%= _num_bits_in_range(bit, max_bit, min_bit) %>"></td>
+%         end
+%       end
+%     else
+%       bit.shift_out_left do |bit|
+%         if _index_in_range?(bit.position, max_bit, min_bit)
+      <td>0</td> 
+%         end
+%       end
+%     end
+%   else
+%     if name
+%       if bit.readable?
+      <td class="<%= _bit_rw(bit) %>"><span><%= name %></span></td>
+%       else
+      <td class="<%= _bit_rw(bit) %>"></td>
+%       end
+%     else
+      <td>0</td> 
+%     end
+%   end
+%  end
+% end
+    </tr>
+
+%#############################################    
+%#  Write Row
+%#############################################    
+    <tr class="write">
+      <td class="heading">W</td>
+% reg.named_bits :include_spacers => true do |name, bit|
+%  if _bit_in_range?(bit, max_bit, min_bit)
+%   if bit.size > 1
+%     if name
+%       if !bit.readable?
+%         bit_name = "#{name}[#{bit.size - 1}:0]"
+      <td class="<%= _bit_rw(bit) %>" colspan="<%= _num_bits_in_range(bit, max_bit, min_bit) %>">
+         <span><%= bit_name %></span>
+      </td>
+%       else
+      <td class="<%= _bit_rw(bit) %>" colspan="<%= _num_bits_in_range(bit, max_bit, min_bit) %>"></td>
+%       end
+%     else
+%       bit.shift_out_left do |bit|
+%         if _index_in_range?(bit.position, max_bit, min_bit)
+      <td class="not-writable"></td> 
+%         end
+%       end
+%     end
+%   else
+%     if name
+%       if !bit.readable?
+      <td class="<%= _bit_rw(bit) %>"><span><%= name %></span></td>
+%       else
+      <td class="<%= _bit_rw(bit) %>"></td>
+%       end
+%     else
+      <td class="not-writable"></td> 
+%     end
+%   end
+%  end
+% end
+    </tr>
+
+%#############################################    
+%#  Reset Row
+%#############################################    
+    <tr class="reset">
+      <td class="heading">Reset</td>
+% reg.named_bits :include_spacers => true do |name, bit|
+%  if _bit_in_range?(bit, max_bit, min_bit)
+%   if bit.size > 1
+%     if name
+%       if bit.nvm_dep != 0 || bit.reset_val == :memory
+          <td colspan="<%= _num_bits_in_range(bit, max_bit, min_bit) %>">M</td>
+%       elsif bit.reset_val == :undefined
+          <td colspan="<%= _num_bits_in_range(bit, max_bit, min_bit) %>">X</td>
+%       else
+          <td colspan="<%= _num_bits_in_range(bit, max_bit, min_bit) %>"><%= bit.reset_val[_max_bit_in_range(bit, max_bit, min_bit).._min_bit_in_range(bit, max_bit, min_bit)].to_s(16).upcase %></td>
+%       end
+%     else
+%       bit.shift_out_left do |bit|
+%         if _index_in_range?(bit.position, max_bit, min_bit)
+      <td></td> 
+%         end
+%       end
+%     end
+%   else
+%     if bit.nvm_dep != 0 || bit.reset_val == :memory
+        <td>M</td>
+%     elsif bit.reset_val == :undefined
+        <td>X</td>
+%     else
+        <td><%= bit.reset_val.to_s(16).upcase %></td>
+%     end
+%   end
+%  end
+% end
+    </tr>
+
+  </tbody>
+</table>
+
+% end # Byte index loop
+
+% if options[:descriptions]
+<table class="bit-descriptions table table-condensed table-bordered" style="margin: 20px 0 0 0">
+  <thead>
+    <tr>
+      <th>Bit</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+% reg.named_bits do |name, bits| 
+    <tr>
+      <td>
+        <p>
+% if bits.size == 1        
+          <%= bits.position %>
+% else
+          <%= bits.position + bits.size - 1 %>-<%= bits.position %>
+% end
+        </p>
+        <p>
+% if bits.size == 1        
+          <%= name %>
+% else
+          <%= name %>[<%= bits.size - 1 %>:0]
+% end
+        </p>
+      </td>
+<td markdown="1">
+
+% bits.description.each do |line|
+<%= line.gsub("\\'", "'") %>
+% end
+
+</td>
+    </tr>  
+% end
+  </tbody>
+</table>  
+% end    
+
+</div>

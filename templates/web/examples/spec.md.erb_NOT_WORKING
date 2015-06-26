@@ -1,0 +1,42 @@
+% render "../layouts/examples.html" do
+
+# Specification Helpers
+
+Use the [Origen specification API](http://origen.freescale.net/origen/latest/guides/models/specs)
+to define specifications in the normal way,
+all of the examples shown here are based on this specification definition:
+
+~~~ruby
+spec :soc_vdd do
+  symbol "Vdd"
+  description "Soc Core Power Supply"
+  min "#{vdd_nom} - 50.mV"
+  max "#{vdd_nom} + 50.mV"
+  audience :external
+end
+~~~
+
+### Specification Table
+
+<%= render "templates/shared/spec", spec: $dut.specs %>
+
+Users can pass the following objects as arguments to the spec option:
+
+1. An object that contains specs (e.g. $dut)
+2. An object's spec hash (e.g. $dut.specs)
+3. An individual spec (e.g. $dut.specs(:soc_vdd))
+
+Here is an example of how to insert a specification table in
+a document using method #3 from above:
+
+~~~eruby
+## Specification Table
+
+<%= "%" %> $dut.specs.each do |name, spec|
+
+<%= "<" + "%= render \"doc_helpers/spec.html\", spec: spec %" + ">" %>
+
+<%= "%" %> end
+~~~
+
+% end

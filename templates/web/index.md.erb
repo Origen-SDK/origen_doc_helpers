@@ -1,0 +1,40 @@
+% render "layouts/basic.html" do
+
+%# HTML tags can be embedded in mark down files if you want to do specific custom
+%# formatting like this, but in most cases that is not required.
+<h1><%= Origen.config.name %> <span style="font-size: 14px">(<%= Origen.app.version %>)</span></h1>
+
+### Purpose
+
+This plugin contains a collection of pre-written documentation layouts and helpers for use in
+many typical Origen documentation scenarios.
+
+Additional contributions are welcome, see below for how to setup a development environment,
+please add examples for any new features.
+
+### How To Import
+
+In your Gemfile add:
+
+~~~ruby
+gem "origen_doc_helpers", ">= <%= Origen.app.version %>"
+~~~
+
+or if your application is a plugin add this to your <code>.gemspec</code>
+
+~~~ruby
+spec.add_development_dependency "origen_doc_helpers", ">= <%= Origen.app.version %>"
+~~~
+
+### How To Use
+
+See the [Examples](<%= path "examples" %>) to see what is available
+and how to use them.
+
+### How To Setup a Development Environment
+
+[Clone the repository from Github](https://github.com/Origen-SDK/origen_doc_helpers).
+
+All templates can be found in <code>templates/shared</code>.
+
+% end

@@ -1,0 +1,86 @@
+% options[:root] ||= "docs"
+% pdf_filename = ::OrigenDocHelpers::PDF.register(options)
+
+<div class="row">
+  <div class="col-md-3 sidebar-nav-container">
+    <div class="well sidebar-nav" style="margin-top: 20px;">
+        <div id="search">
+          <form style="margin-bottom: 15px;">
+            <div class="input-group">
+              <input class="form-control" type="search" placeholder="Search these docs..."/>
+              <span class="input-group-btn">
+                <button type="submit" class="btn btn-search">GO!</button>
+              </span>
+            </div>
+          </form>
+        </div>
+        <div class="panel-group" id="sidebar-accordion">
+
+% options[:index].each_with_index do |(subject, sections), i|          
+%   if subject
+          <div class="panel panel-default">
+            <div class="panel-heading clickable" data-toggle="collapse" data-parent="#sidebar-accordion" href="#sidebar-collapse-<%= i %>">
+              <a class="no-underline">
+                <%= subject %>
+              </a>
+            </div>
+            <div id="sidebar-collapse-<%= i %>" class="panel-collapse collapse <%= sections.has_key?(_resolve_tab(options)) ? 'in' : '' %>">
+              <div class="panel-body">
+                <ul class="nav nav-list">
+%     sections.each do |tab, section|
+% paths = tab.to_s.split("_")
+<li class="<%= tab == _resolve_tab(options) ? 'active' : '' %>"><a href="<%= path "/#{_root_path(options)}/#{paths[0]}/#{paths[1]}" %>"><%= section %></a></li>
+%     end          
+                </ul>
+              </div>
+            </div>
+          </div>
+%   else          
+          <ul class="nav nav-list">
+%     sections.each do |tab, section|
+% paths = tab.to_s.split("_")
+<li class="<%= tab == _resolve_tab(options) ? 'active' : '' %>"><a href="<%= path "/#{_root_path(options)}/#{paths[0]}/#{paths[1]}" %>"><%= section %></a></li>
+%     end          
+           </ul>
+%   end          
+% end          
+      
+% if pdf_filename
+          <div style="text-align: right; margin-top: 20px;">
+            <a href="<%= path "doc_helpers/pdfs/#{pdf_filename}" %>"><i class="fa fa-file-pdf-o"></i> Download PDF</a>
+          </div>
+% end
+
+        </div>
+
+    </div>
+  </div>
+
+%# The markdown attribute is important if you are going to include content written
+%# in markdown, without this is will be included verbatim
+  <div class="col-md-9 nav-page-container" markdown="1">
+  <article markdown="1">  
+
+% found = options[:index].find{ |k,v| v.has_key?(_resolve_tab(options)) }
+% topic_key = found ? found[0] : nil
+% topic = options[:topic] || topic_key
+% if topic
+  <h3 class="topic-title"><%= topic  %></h3>
+% end
+
+% heading = options[:heading] || (options[:index][topic_key] ? options[:index][topic_key][_resolve_tab(options)] : nil)
+% if heading
+  <h2 class="topic-subtitle"><%= heading %></h2>
+% end
+
+<hr>
+
+<%= yield %>    
+
+%# Also important to avoid indentation on return here, since otherwise it could be interpreted
+%# as markdown code
+</article>  
+</div>
+</div>
+
+<script src="<%= path "search.js" %>"></script>

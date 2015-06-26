@@ -1,0 +1,22 @@
+---
+title: <%= options[:title] || Origen.config.name %>
+---
+<%= render "partials/navbar.html", :tab => :examples %>
+
+%# Add/edit sections here, the code below will expand this with the correct markup, 
+%# pass in the topic you want selected via the :tab option.
+% s = {}
+% s[nil] = {
+%   :intro => "Introduction",
+%   :page2 => "Page 2",
+% }
+% s["Topic 1"] = {
+%   :topic1_item1 => "First Item",
+%   :topic1_item2 => "Second Item",
+% }
+
+% render "templates/shared/searchable.html", options.merge(:index => s, :root => "examples/searchable") do
+
+<%= yield %>    
+
+% end

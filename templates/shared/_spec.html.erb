@@ -1,0 +1,20 @@
+# % specs = []
+# % if options[:spec].class == Origen::Specs::Spec # Found an individual spec
+#  % specs << options[:spec]
+# % elsif options[:spec].class == Hash && options[:spec].values.first.class == Origen::Specs::Spec # Found all specs for the owner
+#  % specs = options[:spec].values
+# % elsif options[:spec].respond_to?(:specs) && options[:spec].send(:specs) # Found an IP so just see if it has specs and get them if so
+#  % specs = options[:spec].send(:specs).values
+# % else
+#  % fail "'spec' option must point to  an indv. spec or a block that has specs."
+# % end
+
+# % include_data = false
+
+# % specs.each do |s|
+#  <div class="specification">
+#  <a class="anchor" name="<%= "#{s.owner.ip_name}, mode = #{s.mode}" %>"></a>
+#  <a href='#<%= "#{s.owner.ip_name}, mode = #{s.mode}" %>'>
+#  </a>
+# % end
+
