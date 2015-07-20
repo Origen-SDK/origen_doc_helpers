@@ -51,6 +51,50 @@ END
         end
         include Yammer
 
+        module Disqus
+          def disqus_comments(options = {})
+            options = {
+              disqus_id: 'origen-sdk',#Origen.app.config.disqus_id,
+            }.merge(options)
+
+            <<END
+<div style="position: relative">
+  <hr>
+  <h4>Comments</h4>
+</div>
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = '#{options[:disqus_id]}';
+    var disqus_title;
+    var disqus_url = 'http://' + window.location.hostname + window.location.pathname;
+
+    disqus_title = $("h1").text();
+    if (disqus_title.length == 0) {
+      disqus_title = $("h2").text();
+    }
+    if (disqus_title.length == 0) {
+      disqus_title = $("h3").text();
+    }
+    if (disqus_title.length == 0) {
+      disqus_title = $("title").text();
+    } else {
+      disqus_title = disqus_title + ' (' + $("title").text() + ')';
+    }
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+END
+          end
+        end
+        include Disqus
+
         # Helpers for the register diagrams
         module RegisterHelpers
           # Returns true if some portion of the given bits falls
