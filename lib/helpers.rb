@@ -54,7 +54,7 @@ END
         module Disqus
           def disqus_comments(options = {})
             options = {
-              disqus_shortname: Origen.app.config.disqus_shortname || 'origen-sdk',
+              disqus_shortname: Origen.app.config.disqus_shortname || 'origen-sdk'
             }.merge(options)
 
             <<END
@@ -81,7 +81,7 @@ END
     } else {
       disqus_title = disqus_title + ' (' + $("title").text() + ')';
     }
-    
+
     /* * * DON'T EDIT BELOW THIS LINE * * */
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
