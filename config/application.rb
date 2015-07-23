@@ -9,6 +9,7 @@ class OrigenDocHelpersApplication < Origen::Application
   # command) fill in these attributes.
   config.web_directory = "git@github.com:Origen-SDK/Origen-SDK.github.io.git/doc_helpers"
   config.web_domain = "http://origen-sdk.org/doc_helpers"
+  config.disqus_shortname = "origen-sdk"
 
   config.semantically_version = true
 

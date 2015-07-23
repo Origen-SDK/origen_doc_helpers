@@ -2,25 +2,53 @@
 
 # Disqus Comments
 
-These helpers wrap the [Yammer Embed API](https://developer.yammer.com/connect/)
-which allows Yammer feeds to be embedded in any web page.
+These helpers make it easy to drop a [Disqus](https://disqus.com/) comments section at the
+bottom of your pages, just like [the one below](<%= path "examples/disqus/#Comments" %>).
 
-The most useful application of this is to provide a comment stream which will be
-unique to each page, like the one you see below!
+Note that such comments will be externally visible and therefore **this should not be used for
+company internal applications/web pages**. For similar functionality within a company you
+can use [Yammer comments](<%= path "examples/yammer" %>) instead if your company uses the
+Office 365 suite.
 
-To include comments simply add this to the bottom of any given page, or your
+## Community Selection
+
+Any comments made on a web page will be associated with a specific community on Disqus where
+they can be collectively viewed and moderated, for example here is
+[the Origen SDK Disqus community](https://disqus.com/home/forum/origen-sdk/).
+
+If your web page is about a plugin/application that will be of general interest within the Origen
+community, then you are welcome to use the Origen SDK Disqus community which will be selected
+by default.
+
+If your pages are more about your specific application domain, then you should
+[create you own community channel](https://disqus.com/home/channels/new/) instead.
+
+Your new community can be associated with your application by setting the following
+app configuration attribute:
+
+~~~ruby
+# config/application.rb
+config.disqus_shortname = "my-community"
+~~~
+
+Alternatively this parameter can be passed directly to the comments helper as shown
+below.
+
+## Adding Comments
+
+To include disqus comments simply add this to the bottom of any given page, or your
 layout file to add comments to every page:
 
 ~~~eruby
-<%= "<" + "%= yammer_comments %" + ">" %>
+<%= "<" + "%= disqus_comments %" + ">" %>
 ~~~
 
 The following options are available:
 
 ~~~text
-:prompt   - Set what the prompt for new comments should be, 'Comment on this page' is the default
-:group_id - Specify a specific Yammer group ID, defaults to config.yammer_group in the application config, and if not defined falls back to the
-            Origen User's Group
+:disqus_shortname - Specify the disqus forum to associate your comments with. This will fall back to the value returned by
+                    RGen.app.config.disqus_shortname, and failing that will fall back to 'origen-sdk' to select the Origen
+                    community channel.
 ~~~
 
 % end

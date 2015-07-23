@@ -54,7 +54,7 @@ END
         module Disqus
           def disqus_comments(options = {})
             options = {
-              disqus_id: 'origen-sdk',#Origen.app.config.disqus_id,
+              disqus_shortname: Origen.app.config.disqus_shortname || 'origen-sdk',
             }.merge(options)
 
             <<END
@@ -65,7 +65,7 @@ END
 <div id="disqus_thread"></div>
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
-    var disqus_shortname = '#{options[:disqus_id]}';
+    var disqus_shortname = '#{options[:disqus_shortname]}';
     var disqus_title;
     var disqus_url = 'http://' + window.location.hostname + window.location.pathname;
 
