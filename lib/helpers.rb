@@ -57,6 +57,11 @@ END
               disqus_shortname: Origen.app.config.disqus_shortname || 'origen-sdk'
             }.merge(options)
 
+            # Created this other channel in error, don't use it
+            if options[:disqus_shortname].to_s == 'origensdk'
+              options[:disqus_shortname] = 'origen-sdk'
+            end
+
             <<END
 <div style="position: relative">
   <hr>
