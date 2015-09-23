@@ -27,5 +27,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "origen", "~> 0.2", ">=0.2.1"
 
   # Add any gems that your plugin needs for its development environment only
-  #spec.add_development_dependency "origen_doc_helpers", ">= 0.1.0"
+  spec.add_development_dependency "origen_testers"
 end

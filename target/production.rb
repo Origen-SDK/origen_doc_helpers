@@ -13,4 +13,4 @@
 #
 # $dut.do_something_before_every_job
 $dut = OrigenDocHelpers::DUT.new
-$tester = Origen::Tester::J750.new
+$tester = OrigenTesters::J750.new

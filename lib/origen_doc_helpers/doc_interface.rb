@@ -1,6 +1,6 @@
 module OrigenDocHelpers
   class DocInterface
-    include Origen::Tester::Doc::Generator
+    include OrigenTesters::Doc::Generator
 
     def initialize(_options = {})
     end

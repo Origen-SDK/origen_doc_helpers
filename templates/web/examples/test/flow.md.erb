@@ -6,7 +6,7 @@ Documentation of an Origen-generated test program can be created as follows (req
 documentation interface to be setup):
 
 ~~~eruby
-<%= "%" %> prog = Origen::Tester::Doc.generate_program_model("program/probe_1.rb", :target => "default")
+<%= "%" %> prog = OrigenTesters::Doc.generate_program_model("program/probe_1.rb", :target => "default")
 
 <%= "<" + "%= render \"doc_helpers/test/flow.md\", :heading => \"Probe 1\", :program => prog, :flow => :probe_1_flow %" + ">" %>
 ~~~
@@ -28,7 +28,7 @@ Additionally these options are available to customize the output:
 
 Here is a live example:
 
-% prog = Origen::Tester::Doc.generate_program_model("program/probe_1.rb", :target => "debug")
+% prog = OrigenTesters::Doc.generate_program_model("program/probe_1.rb", :target => "debug")
 
 <%= render "templates/shared/test/flow.md", :heading => "Probe 1", :program => prog, :flow => :probe_1_flow %>
 
