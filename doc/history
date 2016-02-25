@@ -1,3 +1,14 @@
+<a class="anchor release_tag" name="v0_3_0"></a>
+<h1><a href="#v0_3_0">Tag: v0.3.0</a></h1>
+
+##### Branch: 'master'
+
+##### by Stephen McGinty on 25-Feb-2016 09:02AM
+
+
+Added support for generating test flow documentation based on a ATP flow model from the
+latest version of OrigenTesters.
+
 <a class="anchor release_tag" name="v0_2_1"></a>
 <h1><a href="#v0_2_1">Tag: v0.2.1</a></h1>
 
