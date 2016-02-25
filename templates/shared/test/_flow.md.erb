@@ -4,6 +4,192 @@
 % flows = options[:flow] || options[:flows] 
 % flows = flows ? [flows].flatten : nil
 
+% if !program
+%   Origen.target.temporary = options[:target]
+%   program =  OrigenTesters.program
+
+<style>
+  .clickable { cursor: pointer }
+  h5 strong { font-size: 12px }
+  .description-pane { border-left: 1px solid #eee }
+  span.label, span.connector { margin-right: 5px; }
+  .test-overview { border-bottom: 2px solid #aaa; margin-bottom: 10px; padding-bottom: 10px; }
+  .test-attributes { font-size: 12px }
+  .test-overview .header { padding: 0 15px 5px 15px; }
+  .test-overview .panel-group { margin-bottom: 0; }
+  h4 .test-number { font-size: 14px; }
+  table tr th { text-align: left !important; }
+</style>
+
+<script type="text/javascript">
+  // Modified from: http://jsfiddle.net/jhfrench/mc4Qd/
+  window.onload = function() {
+    $('.expand-collapse-switch').click(function() {
+
+      var newstate = $(this).attr('state') ^ 1,
+          icon = newstate ? "minus" : "plus";
+
+      // if state=0, show all the accordion divs within the same block (in this case, within the same section)
+      if ( $(this).attr('state')==="0" ) {
+          $(this).parent().find('div.panel-collapse:not(.in)').collapse('show');
+          $(this).parent().find('.expand-collapse-switch').html("<i class=\"fa fa-" + icon + "\"></i>").attr('state', newstate);
+      }
+      // otherwise, collapse all the divs
+      else {
+          $(this).parent().find('div.panel-collapse.in').collapse('hide');
+          $(this).parent().find('.expand-collapse-switch').html("<i class=\"fa fa-" + icon + "\"></i>").attr('state', newstate);
+      }
+
+      $(this).html("<i class=\"fa fa-" + icon + "\"></i>");
+
+      $(this).attr('state',newstate)
+
+      return false;
+    });
+
+    $('.expand-all-link').click(function() {
+      $('div.panel-collapse:not(.in)').collapse('show');
+      $('.expand-collapse-switch').html("<i class=\"fa fa-minus\"></i>").attr('state', 1);
+      return false;
+    });
+
+    $('.collapse-all-link').click(function() {
+      $('div.panel-collapse.in').collapse('hide');
+      $('.expand-collapse-switch').html("<i class=\"fa fa-plus\"></i>").attr('state', 0);
+      return false;
+    });
+
+    var tab = getUrlParameter("tab")
+    if (tab == "flow") {
+      $("#flow-tab-select").tab("show");
+    }
+
+    // When a test line in the flow listing is clicked, show the test in the flow view
+    $('.list-test-line').click(function() {
+      var id = "#" + $(this).data("testid");
+      // Show the flow tab
+      $("#flow-tab-select").tab("show");
+      // Expand the elements wrapping the target test
+      $(id).parents('div.panel-collapse:not(.in)').collapse('show');
+      $(id).parents('.panel').children('.expand-collapse-switch').html("<i class=\"fa fa-minus\"></i>").attr('state', 1);
+      // Then scroll to it
+      jQuery('html,body').animate({scrollTop: jQuery(id).offset().top - 300}, 1000);
+      flashIt($(id), 10);
+      return false;
+    });
+
+    // Links to listing from the flow view of tests
+    $('.list-link').click(function() {
+      var id = "#" + $(this).data("testid");
+      // Show the flow tab
+      $("#list-tab-select").tab("show");
+      // Then scroll to it
+      jQuery('html,body').animate({scrollTop: jQuery(id).offset().top - 350}, 500);
+      flashIt($(id), 10);
+      return false;
+    });
+
+    // Remove any links where the given test is not present
+    $(".list-link").each(function() {
+      var id = "#" + $(this).data("testid");
+      if ($(id).length == 0) {
+        $(this).next().remove() // Remove the separator
+        $(this).remove();
+      }
+    });
+
+    // Links to the top of the page
+    $('.top-link').click(function() {
+      jQuery('html,body').animate({scrollTop: 0}, 500);
+      return false;
+    });
+
+    // Update the +/- icons when a panel is changed manually by clicking it
+    $('.panel-collapse').on('hidden.bs.collapse', function () {
+        if ($(this).hasClass("in") == false) {
+          $(this).parent().children('.expand-collapse-switch').html("<i class=\"fa fa-plus\"></i>").attr('state', 0);
+        }
+    })
+
+    $('.panel-collapse').on('shown.bs.collapse', function () {
+        if ($(this).hasClass("in") == true) {
+          $(this).parent().children('.expand-collapse-switch').html("<i class=\"fa fa-minus\"></i>").attr('state', 1);
+        }
+    })
+  };
+
+  var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+  };
+
+  function flashIt(element, times){
+    for (var i=0; i < times; i++){
+      setTimeout(function(){
+        $(element).toggleClass("highlight");
+      }, (300 * i));
+    };
+  };
+</script>
+
+
+<div class="row">
+  <div class="col-md-12">
+
+    <h2><%= options[:heading] %> <span style="font-size: 14px">(generated for target '<%= options[:target] %>')</span></h2>
+
+    <div>
+      <!-- Nav tabs -->
+      <ul id="videoTabs" class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#listing" id="list-tab-select" aria-controls="listing" role="tab" data-toggle="tab">Datalog</a></li>
+        <li role="presentation"><a href="#flow" id="flow-tab-select" aria-controls="flow" role="tab" data-toggle="tab">Flow View</a></li>
+      </ul>
+
+      <!-- Tab panes -->
+      <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="listing" style="padding-top: 15px">
+
+% formatter = OrigenDocHelpers::ListFlowFormatter.new
+<%= formatter.open_table %>
+% flows.each do |flow|
+<%= formatter.run_and_format(program.flow(flow).ast, options[:context]) %>
+% end
+<%= formatter.close_table %>
+
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="flow" style="padding-top: 15px">
+          <div style="height: 40px;">
+            <span class="pull-right">
+              <a class="expand-all-link" href="#">expand all</a> |
+              <a class="collapse-all-link" href="#">collapse all</a>
+            </span>
+          </div>
+
+% formatter = OrigenDocHelpers::HtmlFlowFormatter.new
+% flows.each do |flow|
+<%= formatter.run_and_format(program.flow(flow).ast, {evaluate_flow_flags: false, evaluate_run_flags: false, evaluate_set_result: false}.merge(options[:context])) %>
+% end
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+% # Legacy output based on Doc tester, abandon hope all ye who enter here...
+% else
+
 <div class="row">
 %# The markdown attribute is important if you are going to include content written
 %# in markdown, without this is will be included verbatim
@@ -225,3 +411,5 @@
 </div>
 </div>
 </div>
+
+% end

@@ -178,19 +178,23 @@ END
             flow[:soft_bin] || flow[:softbin]
           end
 
-          def _start_accordion(heading, _options = {})
+          def _start_accordion(heading, options = {})
+            options = {
+              panel: :default
+            }.merge(options)
             @_accordion_index ||= 0
             @_accordion_index += 1
             <<-END
-<div class="panel panel-default">
-<a href="#_" class="expandcollapse btn btn-xs pull-right btn-default" state="0"><i class='fa fa-plus'></i></a>
-<div class="panel-heading clickable" style="background:whitesmoke" data-toggle="collapse" data-parent="#blah2" href="#collapseAccordion#{@_accordion_index}">
-<a class="no-underline">
+
+
+<div class="panel panel-#{options[:panel]}">
+<a href="#_" class="expand-collapse-switch btn btn-xs pull-right btn-default" state="0"><i class='fa fa-plus'></i></a>
+<div class="panel-heading clickable" data-toggle="collapse" data-parent="#blah2" href="#collapseAccordion#{@_accordion_index}">
 #{heading}
-</a>
 </div>
 <div id="collapseAccordion#{@_accordion_index}" class="panel-collapse collapse">
 <div class="panel-body" markdown="1">
+
 
             END
           end
@@ -198,9 +202,12 @@ END
           def _stop_accordion
             <<-END
 
+
 </div>
 </div>
 </div>
+
+
             END
           end
 

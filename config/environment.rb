@@ -26,5 +26,7 @@
 #require "#{Origen.root}/c90_top_level/p2"
 module OrigenDocHelpers
   autoload :PDF, "origen_doc_helpers/pdf"
+  autoload :HtmlFlowFormatter, "origen_doc_helpers/html_flow_formatter"
+  autoload :ListFlowFormatter, "origen_doc_helpers/list_flow_formatter"
 end
 require "helpers"
