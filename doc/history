@@ -1,3 +1,14 @@
+<a class="anchor release_tag" name="v0_4_0"></a>
+<h1><a href="#v0_4_0">Tag: v0.4.0</a></h1>
+
+##### Branch: 'master'
+
+##### by Stephen McGinty on 08-Apr-2016 08:57AM
+
+
+Added flow and model full page generators. Retired old flow doc generator based on having
+a documentation interface.
+
 <a class="anchor release_tag" name="v0_3_0"></a>
 <h1><a href="#v0_3_0">Tag: v0.3.0</a></h1>
 
