@@ -2,7 +2,7 @@
 title: <%= options[:title] || Origen.config.name %>
 analytics: UA-64455560-1
 ---
-<%= render "partials/navbar.html", :tab => :examples %>
+<%= render "partials/navbar.html", :tab => :helpers %>
 
 %# Add/edit sections here, the code below will expand this with the correct markup, 
 %# pass in the topic you want selected via the :tab option.
@@ -16,7 +16,7 @@ analytics: UA-64455560-1
 %   :topic1_item2 => "Second Item",
 % }
 
-% render "templates/shared/searchable.html", options.merge(:index => s, :root => "examples/searchable") do
+% render "templates/shared/searchable.html", options.merge(:index => s, :root => "helpers/searchable") do
 
 <%= yield %>    
 

@@ -1,10 +1,10 @@
-% render "../layouts/examples.html" do
+% render "../layouts/helpers.html" do
 
 # Specification Helpers
 
 Use the [Origen specification API](http://origen.freescale.net/origen/latest/guides/models/specs)
 to define specifications in the normal way,
-all of the examples shown here are based on this specification definition:
+all of the helpers shown here are based on this specification definition:
 
 ~~~ruby
 spec :soc_vdd do

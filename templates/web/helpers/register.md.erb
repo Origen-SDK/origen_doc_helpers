@@ -1,4 +1,4 @@
-% render "../layouts/examples.html" do
+% render "../layouts/helpers.html" do
 
 # Register Helpers
 
@@ -56,8 +56,6 @@ end
 
 ### Basic Register Diagram
 
-<%= render "templates/shared/register", :reg => $dut.reg(:mclkdiv) %>
-
 Here is an example of how to insert a basic register diagram in
 a document:
 
@@ -71,9 +69,9 @@ a document:
 <%= "%" %> end
 ~~~
 
-### Register Diagram with Descriptions
+<%= render "templates/shared/register", :reg => $dut.reg(:mclkdiv) %>
 
-<%= render "templates/shared/register", :reg => $dut.reg(:mclkdiv), :descriptions => true %>
+### Register Diagram with Descriptions
 
 Set the <code>:descriptions</code> switch to true to include the register and
 bit descriptions:
@@ -87,6 +85,8 @@ bit descriptions:
 
 <%= "%" %> end
 ~~~
+
+<%= render "templates/shared/register", :reg => $dut.reg(:mclkdiv), :descriptions => true %>
 
 ### Additional Test Cases
 

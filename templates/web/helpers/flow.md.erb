@@ -1,0 +1,113 @@
+% render "../layouts/helpers.html" do
+
+# Test Program Flow Documentation
+
+This helper will build a web page to document a test program flow the has been created with Origen.
+
+[Here is an example](http://origen-sdk.org/link_demo/flows/probe_1_flow/).
+
+Multiple flows can be supplied and an [index page like this](http://origen-sdk.org/link_demo/flows)
+is generated to help locate the documentation for a given flow.
+
+## How To Use
+
+Call the helper from an <code>after_web_site_compile</code> callback handler in your
+application's <code>config/application.rb</code> like this:
+
+~~~ruby
+def after_web_site_compile(options)
+  # First build the program to create a flow model
+  Origen.app.runner.launch action: :program, files: "program/probe1.rb"
+  # Then the documentation for it
+  OrigenDocHelpers.generate_flow_docs layout: "#{Origen.root}/templates/web/layouts/_basic.html.erb", tab: :flows  do |d|
+    d.page flow: :probe1,
+           name: "Probe 1 Flow",
+           target: "default.rb"
+  end
+end
+~~~
+
+Pages for multiple flows can be created like this:
+
+~~~ruby
+def after_web_site_compile(options)
+  # First build the program to create a flow model
+  Origen.app.runner.launch action: :program, files: "program/production.list"
+  # Then the documentation for it
+  OrigenDocHelpers.generate_flow_docs layout: "#{Origen.root}/templates/web/layouts/_basic.html.erb", tab: :flows  do |d|
+    d.page flow: :probe1,
+           name: "Probe 1 Flow",
+           target: "default.rb"
+    d.page flow: :probe2,
+           name: "Probe 2 Flow",
+           target: "default.rb"
+    d.page flow: :ft,
+           name: "Final Test Flow",
+           target: "default.rb"
+  end
+end
+~~~
+
+Multiple flows can be included on the one page like this:
+
+~~~ruby
+def after_web_site_compile(options)
+  # First build the program to create a flow model
+  Origen.app.runner.launch action: :program, files: "program/production.list"
+  # Then the documentation for it
+  OrigenDocHelpers.generate_flow_docs layout: "#{Origen.root}/templates/web/layouts/_basic.html.erb", tab: :flows  do |d|
+    d.page flows: [:probe1_start, :probe1_middle, :probe1_end],
+           name: "Probe 1 Flow",
+           target: "default.rb"
+  end
+end
+~~~
+
+Or finally the same flow can be documented as generated for different targets:
+
+~~~ruby
+def after_web_site_compile(options)
+  # First build the program to create a flow model
+  Origen.target.loop targets: ["device_a", "device_b"] do
+    Origen.app.runner.launch action: :program, files: "program/production.list"
+  end
+  # Then the documentation for it
+  OrigenDocHelpers.generate_flow_docs layout: "#{Origen.root}/templates/web/layouts/_basic.html.erb", tab: :flows  do |d|
+    ["device_a", "device_b"].each do |target|
+      d.page flows: [:probe1_start, :probe1_middle, :probe1_end],
+             name: "Probe 1 Flow",
+             target: target
+    end
+  end
+end
+~~~
+
+## Options
+
+<code>OrigenDocHelpers.generate_flow_docs</code>
+
+* <code>:layout</code> - **Required**, supply a full path to your application's layout file
+* Any other options will be passed to your layout file unmodified, e.g. to set the tab in the generated
+  pages in the above example
+
+<code>page</code>  
+
+* <code>:flow(s)</code> - **Required**, the ID of the flow or flows to run, this is the ID that would be referenced when running <code>origen testers:run FLOW_ID</code>
+* <code>:name</code> - **Required**, the name of the given flow
+* <code>:target</code> - **Required**, the name of the target that has been used to generate the program model
+* <code>:group</code> - Optional, a heading to group similar flows under on the index page, e.g. "Production", "In Development"
+* <code>:context</code> - Optional, a hash of flow runtime conditions, similar to that accepted by <code>origen testers:run</code>, e.g. <code>{ job: "P1" }</code>. This will determine what tests are included in the documentation.
+
+## Website Integration
+
+The flows index page will be generated at path <code>/flows</code> within your application, and it is common
+to create a "Flows(s)" tab in your website's navigation bar to link to this.
+
+If your application only has one flow, then the navbar link should be setup to point directly to
+that flows's page.
+
+The location of the pages for the individual flows are based on the flow name and will be unique to each application,
+you can find them initially via the index page.
+
+
+% end

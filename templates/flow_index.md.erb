@@ -1,0 +1,19 @@
+% opts = options
+% render options[:layout], options[:layout_options] do
+
+# Test Program Flows
+
+% (opts[:no_group_pages] || []).each do |page|
+* [<%= page.name %>](<%= path page.output_path %>)
+% end
+
+% (opts[:pages] || {}).each do |group, pages|
+### <%= group %>
+
+%   pages.each do |page|
+* [<%= page.name %>](<%= path page.output_path %>)
+%   end
+
+% end
+
+% end

@@ -1,0 +1,125 @@
+% opts = options
+% model = options[:model]
+% render options[:layout], options[:layout_options] do
+
+<script type="text/javascript">
+  // Modified from: http://jsfiddle.net/jhfrench/mc4Qd/
+  window.onload = function() {
+    // Links to the top of the page
+    $('.top-link').click(function() {
+      jQuery('html,body').animate({scrollTop: 0}, 500);
+      return false;
+    });
+  };
+</script>
+
+<style>
+  tr.clickable td { padding: 0px !important; }
+  tr.clickable a { display: block; height: 100%; width: 100%; padding: 8px; text-decoration: none; }
+</style>
+
+<div class="row" style="margin-top: 10px; margin-bottom: 15px;">
+  <div class="col-md-9">
+    <img src="http://origen-sdk.org/img/origen-device.png" style="float: left; height:50px; width: 50px; margin-top: 14px;">
+    <h1 style="float: left; margin-left: 10px;"><%= opts[:heading] %></h1>
+  </div>
+  <div id="search" class="col-md-3" style="margin-top: 20px;">
+    <form style="margin-bottom: 15px;">
+      <div class="input-group">
+        <input class="form-control" type="search" placeholder="Search within this model..."/>
+        <span class="input-group-btn">
+          <button type="submit" class="btn btn-search">GO!</button>
+        </span>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <ol class="breadcrumb">
+%   size = opts[:breadcrumbs].size      
+%   opts[:breadcrumbs].each_with_index do |crumb, i|
+%     if i == size - 1
+      <li class="active"><%= crumb[0] %></li>
+%     else
+      <li><a href="<%= path crumb[1] %>"><%= crumb[0] %></a></li>
+%     end
+%   end      
+    </ol>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12 search-results">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <h3>Blocks</h3>
+
+    <table class="table table-hover">
+      <thead><tr>
+        <th>Address</th>
+        <th>Name</th>
+      </tr></thead>
+      <tbody>
+%   model.sub_blocks.sort_by { |name, block| block.base_address }.each do |name, block|
+        <tr class="clickable"> 
+          <td><a href="<%= path "#{opts[:path]}/#{name}" %>"><%= block.base_address.to_hex %></a></td>
+          <td><a href="<%= path "#{opts[:path]}/#{name}" %>"><%= name %></a></td>
+        </tr> 
+%   end
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col-md-6">
+    <h3>Registers</h3>
+
+    <table class="table table-hover">
+      <thead><tr>
+        <th>Address</th>
+        <th>Name</th>
+      </tr></thead>
+      <tbody>
+%   model.regs.sort_by { |name, reg| reg.offset }.each do |name, reg|
+        <tr class="clickable"> 
+          <td><a href="#<%= reg.name %>"><%= reg.address.to_hex %></a></td>
+          <td><a href="#<%= reg.name %>"><%= name %></a></td>
+        </tr> 
+%   end
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+%   if model.owns_registers?
+
+<hr>
+<div class="row">
+  <div class="col-md-12">
+    <article>
+    <h3>Registers of <%= model.model.class%> <%= model.name ? "(#{model.name})" : model.try(:includes_origen_top_level?) ? "(dut)" : "" %></h3>
+
+%     model.regs.sort_by { |name, reg| reg.offset }.each do |name, reg|
+
+    <div>
+      <span class="pull-right"><a class="top-link" href="#">back to top</a></span>
+    </div>
+
+<%= render "doc_helpers/register.html", reg: reg, preserve_target: true, descriptions: true, origen_path: opts[:origen_path] %>
+
+%     end
+
+    </article>
+  </div>
+</div>
+
+%   end
+
+% end
+<script>window.origen_search_id = "<%= opts[:search_id] %>";</script>
+<script src="<%= path "search.js" %>"></script>

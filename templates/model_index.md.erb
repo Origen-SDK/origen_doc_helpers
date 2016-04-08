@@ -1,0 +1,24 @@
+% opts = options
+% render options[:layout], options[:layout_options] do
+
+<div class="row" style="margin-top: 10px; margin-bottom: 15px;">
+  <div class="col-md-9">
+    <img src="http://origen-sdk.org/img/origen-device.png" style="float: left; height:50px; width: 50px; margin-top: 14px;">
+    <h1 style="float: left; margin-left: 10px;">Models</h1>
+  </div>
+</div>
+
+% (opts[:no_group_pages] || []).each do |page|
+* [<%= page.heading %>](<%= path page.output_path %>)
+% end
+
+% (opts[:pages] || {}).each do |group, pages|
+### <%= group %>
+
+%   pages.each do |page|
+* [<%= page.heading %>](<%= path page.output_path %>)
+%   end
+
+% end
+
+% end

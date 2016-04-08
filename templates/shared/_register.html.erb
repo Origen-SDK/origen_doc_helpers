@@ -5,10 +5,16 @@
 <a class="anchor" name="<%= "#{reg.name}" %>"></a>
 
 <a href='#<%= reg.name %>'>
-% if reg.full_name
-<h4>0x<%= reg.address.to_s(16).upcase %> - <%= reg.full_name %> (<%= reg.name %>)</h4>
+% if options[:origen_path] && !options[:origen_path].empty?
+%   reg_path = options[:origen_path] + "." + reg.name.to_s
+%   reg_path = "#{reg.name} - #{reg_path}"
 % else
-<h4>0x<%= reg.address.to_s(16).upcase %> - <%= reg.name %></h4>
+%   reg_path = reg.name
+% end
+% if reg.full_name
+<h4>0x<%= reg.address.to_s(16).upcase %> - <%= reg.full_name %> (<%= reg_path %>)</h4>
+% else
+<h4>0x<%= reg.address.to_s(16).upcase %> - <%= reg_path %></h4>
 % end
 </a>
 
@@ -22,10 +28,11 @@
 </div>
 % end
 
-% (reg.size / 8).times do |byte_index|
+% num_bytes = (reg.size / 8.0).ceil
+% num_bytes.times do |byte_index|
 %   # Need to add support for little endian regs here?
-%   byte_number = (reg.size / 8) - byte_index
-%   max_bit = reg.size - (byte_index * 8) - 1
+%   byte_number = num_bytes - byte_index
+%   max_bit = (byte_number * 8) - 1
 %   min_bit = max_bit - 8 + 1
 
 <table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
@@ -33,7 +40,12 @@
     <tr class="bit-positions">
       <th class="spacer"></th>
 % 8.times do |i|
-      <th class="bit-position"><%= reg.size - i - 1 - (byte_index * 8) %></th>
+%   bit_num = (byte_number * 8) - i - 1
+%   if bit_num > reg.size - 1
+      <th class="spacer"></th>
+%   else
+      <th class="bit-position"><%= bit_num %></th>
+%   end
 % end
     </tr>
   </thead>
@@ -46,12 +58,21 @@
       <td class="heading">R</td>
 % reg.named_bits :include_spacers => true do |name, bit|
 %  if _bit_in_range?(bit, max_bit, min_bit)
+%   if max_bit > (reg.size - 1)
+%     (max_bit - (reg.size - 1)).times do
+      <td class="spacer"></td>
+%     end
+%   end
 %   if bit.size > 1
 %     if name
 %       if bit.readable?
 %         bit_name = "#{name}[#{bit.size - 1}:0]"
       <td class="<%= _bit_rw(bit) %>" colspan="<%= _num_bits_in_range(bit, max_bit, min_bit) %>">
+% if options[:descriptions] && !bit.description.empty?
+         <span><a href="#<%= "#{reg.name}_#{name}_#{bit.position}" %>"><%= bit_name %></a></span>
+% else
          <span><%= bit_name %></span>
+% end
       </td>
 %       else
 %         if bit.access == :worz
@@ -72,7 +93,11 @@
 %   else
 %     if name
 %       if bit.readable?
+%         if options[:descriptions] && !bit.description.empty?
+      <td class="<%= _bit_rw(bit) %>"><span><a href="#<%= "#{reg.name}_#{name}_#{bit.position}" %>"><%= name %></a></span></td>
+%         else
       <td class="<%= _bit_rw(bit) %>"><span><%= name %></span></td>
+%         end
 %       else
       <td class="<%= _bit_rw(bit) %>"></td>
 %       end
@@ -91,12 +116,21 @@
       <td class="heading">W</td>
 % reg.named_bits :include_spacers => true do |name, bit|
 %  if _bit_in_range?(bit, max_bit, min_bit)
+%   if max_bit > (reg.size - 1)
+%     (max_bit - (reg.size - 1)).times do
+      <td class="spacer"></td>
+%     end
+%   end
 %   if bit.size > 1
 %     if name
 %       if !bit.readable?
 %         bit_name = "#{name}[#{bit.size - 1}:0]"
       <td class="<%= _bit_rw(bit) %>" colspan="<%= _num_bits_in_range(bit, max_bit, min_bit) %>">
+% if options[:descriptions] && !bit.description.empty?
+         <span><a href="#<%= "#{reg.name}_#{name}_#{bit.position}" %>"><%= bit_name %></a></span>
+% else
          <span><%= bit_name %></span>
+% end
       </td>
 %       else
       <td class="<%= _bit_rw(bit) %>" colspan="<%= _num_bits_in_range(bit, max_bit, min_bit) %>"></td>
@@ -111,7 +145,11 @@
 %   else
 %     if name
 %       if !bit.readable?
+%         if options[:descriptions] && !bit.description.empty?
+      <td class="<%= _bit_rw(bit) %>"><span><a href="#<%= "#{reg.name}_#{name}_#{bit.position}" %>"><%= name %></a></span></td>
+%         else
       <td class="<%= _bit_rw(bit) %>"><span><%= name %></span></td>
+%         end
 %       else
       <td class="<%= _bit_rw(bit) %>"></td>
 %       end
@@ -130,6 +168,11 @@
       <td class="heading">Reset</td>
 % reg.named_bits :include_spacers => true do |name, bit|
 %  if _bit_in_range?(bit, max_bit, min_bit)
+%   if max_bit > (reg.size - 1)
+%     (max_bit - (reg.size - 1)).times do
+      <td class="spacer"></td>
+%     end
+%   end
 %   if bit.size > 1
 %     if name
 %       if bit.nvm_dep != 0 || bit.reset_val == :memory
@@ -164,7 +207,7 @@
 
 % end # Byte index loop
 
-% if options[:descriptions]
+% if options[:descriptions] && reg.named_bits.any? { |name, bits| !bits.description.empty? }
 <table class="bit-descriptions table table-condensed table-bordered" style="margin: 20px 0 0 0">
   <thead>
     <tr>
@@ -177,6 +220,7 @@
     <tr>
       <td>
         <p>
+          <a class="anchor" name="<%= "#{reg.name}_#{name}_#{bits.position}" %>"></a>
 % if bits.size == 1        
           <%= bits.position %>
 % else

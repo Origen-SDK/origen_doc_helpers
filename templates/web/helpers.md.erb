@@ -1,0 +1,25 @@
+% render "layouts/basic.html", :tab => :helpers do
+
+# Available Helpers
+
+These are the helpers currently provided by this plugin, click the helper of
+of interest to see a live example of it and the required application code to use it.
+
+### Complete Web Pages
+
+These helpers will generate complete web pages for you.
+
+[Model Documentation](<%= path "/helpers/model" %>)  | Create a reference manual style set of doc pages for a given model, including full register descriptions
+[Test Program Flow](<%= path "/helpers/flow" %>)     | Create documentation for a test program flow that has been created using Origen Testers
+
+### Components
+
+The following are components that you can embed within your own web pages.
+
+| [Searchable Documents](<%= path "/helpers/searchable/intro" %>) | Provides a layout for a guides section of your website, complete with search box (the [Origen Guides](http://origen-sdk.org/guides) uses this)
+| [Register Descriptions](<%= path "/helpers/register" %>)        | Create a tabular register view, similar to that used in device reference manuals
+| [Yammer Comments](<%= path "/helpers/yammer" %>)                | Embed a comments section at the bottom of your page using Yammer
+| [Disqus Comments](<%= path "/helpers/disqus" %>)                | Embed a comments section at the bottom of your page using Disqus
+
+
+% end

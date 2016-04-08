@@ -72,7 +72,7 @@ As an example here is the actual layout that has been used to generate this page
 ---
 title: <%= options[:title] || Origen.config.name %>
 ---
-<%= "<" + "%= render \"partials/navbar.html\", tab: :examples %" + ">" %>
+<%= "<" + "%= render \"partials/navbar.html\", tab: :helpers %" + ">" %>
 
 <%= "%" %> index = {}
 <%= "%" %> index[nil] = {
@@ -84,8 +84,8 @@ title: <%= options[:title] || Origen.config.name %>
 <%= "%" %>   topic1_item2: "Second Item",
 <%= "%" %> }
 
-%#<%= "%" %> opts = options.merge(index: index, root: "examples/searchable", pdf_title: "Doc Helpers Searchable Guide")
-<%= "%" %> opts = options.merge(index: index, root: "examples/searchable")
+%#<%= "%" %> opts = options.merge(index: index, root: "helpers/searchable", pdf_title: "Doc Helpers Searchable Guide")
+<%= "%" %> opts = options.merge(index: index, root: "helpers/searchable")
 <%= "%" %> render "doc_helpers/searchable.html", options.merge(opts) do
 
 <%= "<" + "%= yield %" + ">" %>
@@ -114,7 +114,7 @@ The top-level header size in your document should be <code>h3</code> or <code>##
 
 <code>.html.erb</code> files will also work if you want to use them.
 
-Here is the actual code used behind the [Topic 1 - First Item](<%= path "examples/searchable/topic1/item1" %>)
+Here is the actual code used behind the [Topic 1 - First Item](<%= path "helpers/searchable/topic1/item1" %>)
 page (where the layout being rendered is the one above):
 
 

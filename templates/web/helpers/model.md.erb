@@ -1,0 +1,81 @@
+% render "../layouts/helpers.html" do
+
+# Model Documentation
+
+This helper will build a collection of web pages that document a model's attributes,
+currently this includes its sub-blocks and registers.
+
+[Here is an example](http://origen-sdk.org/link_demo/models/linkdemo_toplevel/).
+
+Multiple models can be supplied and an [index page like this](http://origen-sdk.org/link_demo/models)
+is generated to help locate the documentation for a given model.
+
+The collection of pages associated with a particular model is also fully searchable via
+the provided search box.
+
+## How To Use
+
+Call the helper from an <code>after_web_site_compile</code> callback handler in your
+application's <code>config/application.rb</code> like this:
+
+~~~ruby
+def after_web_site_compile(options)
+  # Build the model documentation
+  OrigenDocHelpers.generate_model_docs layout: "#{Origen.root}/templates/web/layouts/_basic.html.erb", tab: :model do |d|
+    d.page model: $dut
+  end
+end
+~~~
+
+To generate documentation for more than one model, call the page method multiple times like this:
+
+~~~ruby
+def after_web_site_compile(options)
+  # Build the model documentation
+  OrigenDocHelpers.generate_model_docs layout: "#{Origen.root}/templates/web/layouts/_basic.html.erb", tab: :model do |d|
+    d.page model: MyApp::ModelA.new
+    d.page model: MyApp::ModelB.new
+    d.page model: MyApp::ModelC.new
+  end
+end
+~~~
+
+If the different models are all top-level instances (i.e. they include <code>Origen::TopLevel</code> and are
+what is commonly referred to as <code>$dut</code>), then a target loop should be used like this:
+
+~~~ruby
+def after_web_site_compile(options)
+  # Build the model documentation
+  OrigenDocHelpers.generate_model_docs layout: "#{Origen.root}/templates/web/layouts/_basic.html.erb", tab: :model do |d|
+    Origen.target.loop targets: ["target_a", "target_b", "target_c"] do
+      d.page model: $dut
+    end
+  end
+end
+~~~
+
+## Options
+
+<code>OrigenDocHelpers.generate_model_docs</code>
+
+* <code>:layout</code> - **Required**, supply a full path to your application's layout file
+* Any other options will be passed to your layout file unmodified, e.g. to set the tab in the generated
+  pages in the above example
+
+<code>page</code>  
+
+* <code>:model</code> - **Required**, supply an instance of the model
+* <code>:group</code> - Optional, a heading to group similar models under on the index page, e.g. "Production", "In Development"
+
+## Website Integration
+
+The model index page will be generated at path <code>/models</code> within your application, and it is common
+to create a "Model(s)" tab in your website's navigation bar to link to this.
+
+If your application only has one model, then the navbar link should be setup to point directly to
+that model's page.
+
+The location of the pages for the individual models are based on the model name and will be unique to each application,
+you can find them initially via the index page.
+
+% end
