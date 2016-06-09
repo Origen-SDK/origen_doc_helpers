@@ -59,7 +59,9 @@ module OrigenDocHelpers
     end
 
     def create_page(model, options = {})
-      output_file = "#{Origen.root}/web/content/#{options[:path]}.md"
+      base = "#{Origen.root}/web/content/#{options[:path]}"
+      output_file =  base + '.md'
+      json_file =  base + '_data.json'
 
       Origen.log.info "Building model page: #{output_file}"
       t = Origen.compile model_page_template,
@@ -73,6 +75,10 @@ module OrigenDocHelpers
                          origen_path:    options[:origen_path]
 
       write_out(output_file, t)
+      Origen.log.info "Building JSON page: #{json_file}"
+      File.open(json_file, 'w') do |f|
+        f.puts model.to_json
+      end
 
       model.sub_blocks.each do |name, block|
         path = options[:path] + "/#{name}"
