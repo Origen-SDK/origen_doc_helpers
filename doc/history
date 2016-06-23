@@ -1,3 +1,13 @@
+<a class="anchor release_tag" name="v0_4_2"></a>
+<h1><a href="#v0_4_2">Tag: v0.4.2</a></h1>
+
+##### Branch: 'master'
+
+##### by Stephen McGinty on 23-Jun-2016 08:25AM
+
+
+Bumped min Origen dependency to one that includes the register to\_json method
+
 <a class="anchor release_tag" name="v0_4_1"></a>
 <h1><a href="#v0_4_1">Tag: v0.4.1</a></h1>
 
