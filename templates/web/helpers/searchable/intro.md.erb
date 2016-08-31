@@ -30,6 +30,20 @@ the document with title "Second Item" should live in <code>_documents_root_/topi
 By default the root is <code>"#{Origen.root}/templates/web/docs"</code> but this can be overridden
 by supplying a <code>:root</code> option which should describe the relative path from <code>"#{Origen.root}/templates/web"</code>.
 
+By default, the sub_hash key will be split by the '_' character to find the <code>_directory_/_file_</code>
+as shown above but this can be overridden by supplying the <code>:path_separator</code> option.  For example,
+using <code>path_separator: '__'</code> (double underscore) with the index used below would result in the
+the document with title "Second Item" living now at <code>_documents_root_/topic1/second_item.md.erb</code>
+
+~~~ruby
+index = {}
+index["Topic 1"] = {
+  topic1__first_item: "First Item",
+  topic1__second_item: "Second Item",
+}
+~~~
+
+
 ### The Layout Helper
 
 A layout helper is provided to include a document in the search and wrap it
@@ -47,17 +61,22 @@ The <code>:index</code> option is mandatory, but the following are optional:
 
 ~~~text
 %#:pdf_title - PDF creation is enabled by providing a title via this option, e.g. "My Application Guides"
-:heading   - Each wrapped document will have the heading (e.g. "First Item") inserted at the top of the page,
-             to override it supply this option. A common example would be if the topic is long and
-             so an abbreviated version has been used in the index. e.g. "First Item and Other Stuff"
-:topic     - Each wrapped document will have the topic (e.g. "Topic 1") inserted at the top of the page,
-             to override it supply this option. A common example would be if the topic is long and
-             so an abbreviated version has been used in the index. e.g. "Topic 1 and Other Stuff"
-:root      - override the top-level folder containing your documents, e.g. "tutorials/guides"
-:tab       - the helper should automatically work out what tab to select for each document, however
-             if it is struggling for some reason you can force it by supplying the hash key from the
-             index that the given document should be associated with, e.g. :topic1_item1
-:prompt    - the search box prompt, by default is "Search these docs..."
+:heading           - Each wrapped document will have the heading (e.g. "First Item") inserted at 
+                     the top of the page, to override it supply this option. A common example would 
+                     be if the topic is long and so an abbreviated version has been used in the 
+                     index. e.g. "First Item and Other Stuff"
+:topic             - Each wrapped document will have the topic (e.g. "Topic 1") inserted at the top
+                     of the page, to override it supply this option. A common example would be if 
+                     the topic is long and so an abbreviated version has been used in the 
+                     index. e.g. "Topic 1 and Other Stuff"
+:root              - override the top-level folder containing your documents, e.g. "tutorials/guides"
+:tab               - the helper should automatically work out what tab to select for each document, 
+                     however if it is struggling for some reason you can force it by supplying the
+                     hash key from the index that the given document should be associated 
+                     with, e.g. :topic1_item1
+:prompt            - the search box prompt, by default is "Search these docs..."
+:path_separator    - override how the sub-hash key in the index will be split (which character will 
+                     be used) to generate the location of the document
 ~~~
 
 ### Incorporating in Your Own Layout
