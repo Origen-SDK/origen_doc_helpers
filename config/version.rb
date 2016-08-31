@@ -1,7 +1,7 @@
 module OrigenDocHelpers
   MAJOR = 0
   MINOR = 4
-  BUGFIX = 2
+  BUGFIX = 3
   DEV = nil
 
   VERSION = [MAJOR, MINOR, BUGFIX].join(".") + (DEV ? ".pre#{DEV}" : '')

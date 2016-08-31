@@ -1,3 +1,28 @@
+<a class="anchor release_tag" name="v0_4_3"></a>
+<h1><a href="#v0_4_3">Tag: v0.4.3</a></h1>
+
+##### Branch: 'master'
+
+##### by Ronnie Lajaunie on 31-Aug-2016 11:23AM
+
+
+Add option to parameterize the split character that determines the location of files
+specified by the sub\_hash key of the index list.
+
+By default, the sub\_hash key will be split by the '\_' character to find the
+<code>\_directory\_/\_file\_</code> but this can be overridden by supplying the
+<code>:path\_separator</code> option.  For example, using <code>path\_separator: '\_\_'</code>
+(double underscore) with the index used below would result in the the document with title
+"Second Item" living now at <code>\_documents\_root\_/topic1/second\_item.md.erb</code>.
+
+~~~ruby
+index = {}
+index["Topic 1"] = {
+  topic1\_\_first\_item: "First Item",
+  topic1\_\_second\_item: "Second Item",
+}
+~~~
+
 <a class="anchor release_tag" name="v0_4_2"></a>
 <h1><a href="#v0_4_2">Tag: v0.4.2</a></h1>
 
