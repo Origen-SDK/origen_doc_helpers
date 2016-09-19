@@ -143,6 +143,3 @@ PLATFORMS
 DEPENDENCIES
   origen_doc_helpers!
   origen_testers
-
-BUNDLED WITH
-   1.12.5

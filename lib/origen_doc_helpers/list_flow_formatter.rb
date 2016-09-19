@@ -16,8 +16,8 @@ module OrigenDocHelpers
       str << '<thead><tr>'
       str << '<th>Number</th>'
       str << '<th>Result</th>'
-      str << '<th>Name</th>'
       str << '<th>Test</th>'
+      str << '<th>Pattern</th>'
       str << '<th>Bin</th>'
       str << '<th>Softbin</th>'
       str << '</tr></thead>'
@@ -57,7 +57,7 @@ module OrigenDocHelpers
         name = node.find(:object).value['Test']
       end
       html << "<td>#{name}</td>"
-      html << "<td>#{node.find(:object).value['Test']}</td>"
+      html << "<td>#{node.find(:object).value['Pattern']}</td>"
 
       if (f1 = node.find(:on_fail)) && (r1 = f1.find(:set_result)) && (b1 = r1.find(:bin))
         html << "<td>B#{b1.value}</td>"
