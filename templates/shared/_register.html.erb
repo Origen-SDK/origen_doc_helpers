@@ -56,12 +56,14 @@
 %#############################################    
     <tr class="read">
       <td class="heading">R</td>
+% alignment_done = false
 % reg.named_bits :include_spacers => true do |name, bit|
 %  if _bit_in_range?(bit, max_bit, min_bit)
-%   if max_bit > (reg.size - 1)
+%   if max_bit > (reg.size - 1) && !alignment_done
 %     (max_bit - (reg.size - 1)).times do
       <td class="spacer"></td>
 %     end
+%     alignment_done = true
 %   end
 %   if bit.size > 1
 %     if name
@@ -114,12 +116,14 @@
 %#############################################    
     <tr class="write">
       <td class="heading">W</td>
+% alignment_done = false
 % reg.named_bits :include_spacers => true do |name, bit|
 %  if _bit_in_range?(bit, max_bit, min_bit)
-%   if max_bit > (reg.size - 1)
+%   if max_bit > (reg.size - 1) && !alignment_done
 %     (max_bit - (reg.size - 1)).times do
       <td class="spacer"></td>
 %     end
+%     alignment_done = true
 %   end
 %   if bit.size > 1
 %     if name
@@ -166,12 +170,14 @@
 %#############################################    
     <tr class="reset">
       <td class="heading">Reset</td>
+% alignment_done = false
 % reg.named_bits :include_spacers => true do |name, bit|
 %  if _bit_in_range?(bit, max_bit, min_bit)
-%   if max_bit > (reg.size - 1)
+%   if max_bit > (reg.size - 1) && !alignment_done
 %     (max_bit - (reg.size - 1)).times do
       <td class="spacer"></td>
 %     end
+%     alignment_done = true
 %   end
 %   if bit.size > 1
 %     if name
