@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    origen_doc_helpers (0.5.0)
+    origen_doc_helpers (0.5.1)
       origen (>= 0.7.15)
 
 GEM
@@ -147,4 +147,4 @@ DEPENDENCIES
   origen_testers
 
 BUNDLED WITH
-   1.13.4
+   1.15.3
