@@ -71,9 +71,9 @@
 %         bit_name = "#{name}[#{bit.size - 1}:0]"
       <td class="<%= _bit_rw(bit) %>" colspan="<%= _num_bits_in_range(bit, max_bit, min_bit) %>">
 % if options[:descriptions] && !bit.description.empty?
-         <span><a href="#<%= "#{reg.name}_#{name}_#{bit.position}" %>"><%= bit_name %></a></span>
+         <span title="<%= name %>"><a href="#<%= "#{reg.name}_#{name}_#{bit.position}" %>"><%= bit_name %></a></span>
 % else
-         <span><%= bit_name %></span>
+         <span title="<%= name %>"><%= bit_name %></span>
 % end
       </td>
 %       else
@@ -95,10 +95,16 @@
 %   else
 %     if name
 %       if bit.readable?
-%         if options[:descriptions] && !bit.description.empty?
-      <td class="<%= _bit_rw(bit) %>"><span><a href="#<%= "#{reg.name}_#{name}_#{bit.position}" %>"><%= name %></a></span></td>
+%         if name.size > 10
+%           bit_name = "#{name[0..2]}...#{name[-3..-1]}"
+%#           bit_name = "bit#{bit.position}*"
 %         else
-      <td class="<%= _bit_rw(bit) %>"><span><%= name %></span></td>
+%           bit_name = name
+%         end
+%         if options[:descriptions] && !bit.description.empty?
+      <td class="<%= _bit_rw(bit) %>"><span title="<%= name %>"><a href="#<%= "#{reg.name}_#{name}_#{bit.position}" %>"><%= bit_name %></a></span></td>
+%         else
+      <td class="<%= _bit_rw(bit) %>"><span title="<%= name %>"><%= bit_name %></span></td>
 %         end
 %       else
       <td class="<%= _bit_rw(bit) %>"></td>
@@ -131,9 +137,9 @@
 %         bit_name = "#{name}[#{bit.size - 1}:0]"
       <td class="<%= _bit_rw(bit) %>" colspan="<%= _num_bits_in_range(bit, max_bit, min_bit) %>">
 % if options[:descriptions] && !bit.description.empty?
-         <span><a href="#<%= "#{reg.name}_#{name}_#{bit.position}" %>"><%= bit_name %></a></span>
+         <span title="<%= name %>"><a href="#<%= "#{reg.name}_#{name}_#{bit.position}" %>"><%= bit_name %></a></span>
 % else
-         <span><%= bit_name %></span>
+         <span title="<%= name %>"><%= bit_name %></span>
 % end
       </td>
 %       else
@@ -149,10 +155,16 @@
 %   else
 %     if name
 %       if !bit.readable?
-%         if options[:descriptions] && !bit.description.empty?
-      <td class="<%= _bit_rw(bit) %>"><span><a href="#<%= "#{reg.name}_#{name}_#{bit.position}" %>"><%= name %></a></span></td>
+%         if name.size > 10
+%           bit_name = "#{name[0..2]}...#{name[-3..-1]}"
+%#           bit_name = "bit#{bit.position}*"
 %         else
-      <td class="<%= _bit_rw(bit) %>"><span><%= name %></span></td>
+%           bit_name = name
+%         end
+%         if options[:descriptions] && !bit.description.empty?
+      <td class="<%= _bit_rw(bit) %>"><span title="<%= name %>"><a href="#<%= "#{reg.name}_#{name}_#{bit.position}" %>"><%= bit_name %></a></span></td>
+%         else
+      <td class="<%= _bit_rw(bit) %>"><span title="<%= name %>"><%= bit_name %></span></td>
 %         end
 %       else
       <td class="<%= _bit_rw(bit) %>"></td>
