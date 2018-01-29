@@ -1,4 +1,4 @@
-module OrigenDocHelpers
+module OrigenDocHelpersDev
   class DUT
     include Origen::TopLevel
 

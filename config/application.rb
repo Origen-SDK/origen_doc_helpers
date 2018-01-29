@@ -32,4 +32,13 @@ class OrigenDocHelpersApplication < Origen::Application
     end
   end
 
+  def after_web_site_compile(options)
+    Origen.app.runner.launch action: :program, files: "program"
+    # Then the documentation
+    OrigenDocHelpers.generate_flow_docs layout: "#{Origen.root}/templates/web/layouts/_basic.html.erb", tab: :flows  do |d|
+      d.page flow: :probe1,
+             name: "Probe 1 Flow",
+             target: "default.rb"
+    end
+  end
 end

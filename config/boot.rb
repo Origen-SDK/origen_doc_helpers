@@ -14,6 +14,5 @@ require "origen_doc_helpers"
 # and is required by some of our tests.
 # Normally such a class should not be exposed to 3rd party users of the plugin,
 # so we required it here rather than in lib/origen_doc_helpers.rb.
-module OrigenDocHelpers
-  autoload :DUT, "origen_doc_helpers/dut"
-end
+require "origen_doc_helpers_dev/dut"
+require "origen_doc_helpers_dev/interface"
