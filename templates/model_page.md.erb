@@ -23,6 +23,7 @@
     <img src="http://origen-sdk.org/img/origen-device.png" style="float: left; height:50px; width: 50px; margin-top: 14px;">
     <h1 style="float: left; margin-left: 10px;"><%= opts[:heading] %></h1>
   </div>
+% if opts[:search_box]
   <div id="search" class="col-md-3" style="margin-top: 20px;">
     <form style="margin-bottom: 15px;">
       <div class="input-group">
@@ -33,6 +34,7 @@
       </div>
     </form>
   </div>
+% end
 </div>
 
 <div class="row">
@@ -101,7 +103,9 @@
 <hr>
 <div class="row">
   <div class="col-md-12">
+%   if opts[:search_box]
     <article>
+%   end
     <h3>Registers of <%= model.model.class%> <%= model.name ? "(#{model.name})" : model.try(:includes_origen_top_level?) ? "(dut)" : "" %></h3>
 
 %     model.regs.sort_by { |name, reg| reg.offset }.each do |name, reg|
