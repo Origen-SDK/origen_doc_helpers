@@ -50,6 +50,7 @@ module OrigenDocHelpers
     attr_reader :model
 
     def initialize(options)
+      options = { search_box: true }.merge(options)
       @options = options
       @model = options[:model]
       @search_box = options[:search_box]
