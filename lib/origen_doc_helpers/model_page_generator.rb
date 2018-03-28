@@ -50,8 +50,10 @@ module OrigenDocHelpers
     attr_reader :model
 
     def initialize(options)
+      options = { search_box: true }.merge(options)
       @options = options
       @model = options[:model]
+      @search_box = options[:search_box]
     end
 
     def run
@@ -72,12 +74,15 @@ module OrigenDocHelpers
                          model:          model,
                          breadcrumbs:    options[:breadcrumbs],
                          path:           options[:path],
-                         origen_path:    options[:origen_path]
+                         origen_path:    options[:origen_path],
+                         search_box:     @search_box
 
       write_out(output_file, t)
-      Origen.log.info "Building JSON page: #{json_file}"
-      File.open(json_file, 'w') do |f|
-        f.puts model.to_json
+      if @search_box
+        Origen.log.info "Building JSON page: #{json_file}"
+        File.open(json_file, 'w') do |f|
+          f.puts model.to_json
+        end
       end
 
       model.sub_blocks.each do |name, block|
