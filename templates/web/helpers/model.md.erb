@@ -27,6 +27,19 @@ def after_web_site_compile(options)
 end
 ~~~
 
+For very large models the model search feature may cause the model pages to load slowly. In this
+case it may be desirable to disable the model search feature. You can do this by adding an optional
+argument to the your application's callback handler like this:
+
+~~~ruby
+def after_web_site_compile(options)
+  # Build the model documentation
+  OrigenDocHelpers.generate_model_docs layout: "#{Origen.root}/templates/web/layouts/_basic.html.erb", tab: :model do |d|
+    d.page model: $dut, search_box: false
+  end
+end
+~~~
+
 To generate documentation for more than one model, call the page method multiple times like this:
 
 ~~~ruby
