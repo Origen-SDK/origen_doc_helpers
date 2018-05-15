@@ -17,6 +17,9 @@
 <h4>0x<%= reg.address.to_s(16).upcase %> - <%= reg_path %></h4>
 % end
 </a>
+% if options[:current_value]
+<font color="red">Current Value: <%= sprintf("0x%02X",reg.value) %></font><br/>
+% end
 
 % if options[:descriptions]
 <div markdown="1" style="margin: 0 0 20px 0">
@@ -177,49 +180,90 @@
 % end
     </tr>
 
+% if options[:current_value]
+    <tr class="current_value">
+      <td class="heading">Current Value</td>
+%   alignment_done = false
+%   reg.named_bits :include_spacers => true do |name, bit|
+%     if _bit_in_range?(bit, max_bit, min_bit)
+%       if max_bit > (reg.size - 1) && !alignment_done
+%         (max_bit - (reg.size - 1)).times do
+      <td class="spacer"></td>
+%       end
+%       alignment_done = true
+%     end
+%     if bit.size > 1
+%       if name
+%         if bit.nvm_dep != 0 || bit.data == :memory
+            <td colspan="<%= _num_bits_in_range(bit, max_bit, min_bit) %>">M</td>
+%         elsif bit.data == :undefined
+            <td colspan="<%= _num_bits_in_range(bit, max_bit, min_bit) %>">X</td>
+%         else
+            <td colspan="<%= _num_bits_in_range(bit, max_bit, min_bit) %>"><%= bit.data[_max_bit_in_range(bit, max_bit, min_bit).._min_bit_in_range(bit, max_bit, min_bit)].to_s(16).upcase %></td>
+%         end
+%       else
+%         bit.shift_out_left do |bit|
+%           if _index_in_range?(bit.position, max_bit, min_bit)
+      <td></td> 
+%           end
+%         end
+%       end
+%     else
+%       if bit.nvm_dep != 0 || bit.reset_val == :memory
+        <td>M</td>
+%       elsif bit.data == :undefined
+        <td>X</td>
+%       else
+        <td><%= bit.data.to_s(16).upcase %></td>
+%       end
+%     end
+%    end
+%   end
+    </tr>
+% else
 %#############################################    
 %#  Reset Row
 %#############################################    
     <tr class="reset">
       <td class="heading">Reset</td>
-% alignment_done = false
-% reg.named_bits :include_spacers => true do |name, bit|
-%  if _bit_in_range?(bit, max_bit, min_bit)
-%   if max_bit > (reg.size - 1) && !alignment_done
-%     (max_bit - (reg.size - 1)).times do
+%   alignment_done = false
+%   reg.named_bits :include_spacers => true do |name, bit|
+%   if _bit_in_range?(bit, max_bit, min_bit)
+%     if max_bit > (reg.size - 1) && !alignment_done
+%       (max_bit - (reg.size - 1)).times do
       <td class="spacer"></td>
-%     end
-%     alignment_done = true
-%   end
-%   if bit.size > 1
-%     if name
-%       if bit.nvm_dep != 0 || bit.reset_val == :memory
-          <td colspan="<%= _num_bits_in_range(bit, max_bit, min_bit) %>">M</td>
-%       elsif bit.reset_val == :undefined
-          <td colspan="<%= _num_bits_in_range(bit, max_bit, min_bit) %>">X</td>
-%       else
-          <td colspan="<%= _num_bits_in_range(bit, max_bit, min_bit) %>"><%= bit.reset_val[_max_bit_in_range(bit, max_bit, min_bit).._min_bit_in_range(bit, max_bit, min_bit)].to_s(16).upcase %></td>
 %       end
-%     else
-%       bit.shift_out_left do |bit|
-%         if _index_in_range?(bit.position, max_bit, min_bit)
+%       alignment_done = true
+%     end
+%     if bit.size > 1
+%       if name
+%         if bit.nvm_dep != 0 || bit.reset_val == :memory
+            <td colspan="<%= _num_bits_in_range(bit, max_bit, min_bit) %>">M</td>
+%         elsif bit.reset_val == :undefined
+            <td colspan="<%= _num_bits_in_range(bit, max_bit, min_bit) %>">X</td>
+%         else
+            <td colspan="<%= _num_bits_in_range(bit, max_bit, min_bit) %>"><%= bit.reset_val[_max_bit_in_range(bit, max_bit, min_bit).._min_bit_in_range(bit, max_bit, min_bit)].to_s(16).upcase %></td>
+%         end
+%       else
+%         bit.shift_out_left do |bit|
+%           if _index_in_range?(bit.position, max_bit, min_bit)
       <td></td> 
+%           end
 %         end
 %       end
-%     end
-%   else
-%     if bit.nvm_dep != 0 || bit.reset_val == :memory
-        <td>M</td>
-%     elsif bit.reset_val == :undefined
-        <td>X</td>
 %     else
+%       if bit.nvm_dep != 0 || bit.reset_val == :memory
+        <td>M</td>
+%       elsif bit.reset_val == :undefined
+        <td>X</td>
+%       else
         <td><%= bit.reset_val.to_s(16).upcase %></td>
+%       end
 %     end
-%   end
-%  end
+%    end
 % end
     </tr>
-
+%end
   </tbody>
 </table>
 
@@ -255,8 +299,19 @@
       </td>
 <td markdown="1">
 
+% bit_val_str = bits.data.to_s
 % bits.description.each do |line|
+%   if options[:current_value]
+%     if line =~ /^\d{#{bit_val_str.length}}/ 
+%       if line =~ /^#{bit_val_str}/
+<%=        line.gsub("\\'", "'") %>
+%       end
+%     else
+<%=        line.gsub("\\'", "'") %>
+%     end
+%   else
 <%= line.gsub("\\'", "'") %>
+%   end
 % end
 
 </td>
