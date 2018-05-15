@@ -18,7 +18,7 @@
 % end
 </a>
 % if options[:current_value]
-<font color="red">Current Value: <%= sprintf("0x%02X",reg.value) %></font><br/>
+<h4><font style="background-color: #66FF66">Current Value: <%= sprintf("0x%02X",reg.value) %></font></h4>
 % end
 
 % if options[:descriptions]
@@ -304,6 +304,9 @@
 %   if options[:current_value]
 %     if line =~ /^\d{#{bit_val_str.length}}/ 
 %       if line =~ /^#{bit_val_str}/
+<font style="background-color: #66FF66"> <%=        line.gsub("\\'", "'") %>
+</font>
+%       else
 <%=        line.gsub("\\'", "'") %>
 %       end
 %     else
