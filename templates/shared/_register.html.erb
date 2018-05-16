@@ -19,7 +19,7 @@
 </a>
 % if options[:current_value]
 %   if reg.size <= 8
-<h4><font style="background-color: #66FF66">Current Value: <%= sprintf("0x%08X",reg.value) %></font></h4>
+<h4><font style="background-color: #66FF66">Current Value: <%= sprintf("0x%02X",reg.value) %></font></h4>
 %   elsif reg.size <= 16
 <h4><font style="background-color: #66FF66">Current Value: <%= sprintf("0x%04X",reg.value) %></font></h4>
 %   elsif reg.size <= 24
