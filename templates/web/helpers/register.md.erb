@@ -86,7 +86,22 @@ bit descriptions:
 <%= "%" %> end
 ~~~
 
-<%= render "templates/shared/register", :reg => $dut.reg(:mclkdiv), :descriptions => true %>
+~~~eruby
+## Register Map with Current Value
+
+<%= "%" %> $dut.regs.each do |name, reg|
+
+<%= "<" + "%= render \"doc_helpers/register.html\", reg: reg, preserve_target: true, descriptions: true , current_value: true%" + ">" %>
+
+<%= "%" %> end
+~~~
+
+Please note that the highlighting only works when the bit values match 
+explicitly.  It will not match partial descriptions, e.g. value is 000
+and bitfield description is 00.
+
+
+<%= render "templates/shared/register", :reg => $dut.reg(:mclkdiv), :descriptions => true, current_value: true %>
 
 ### Additional Test Cases
 
