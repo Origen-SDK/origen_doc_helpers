@@ -1,3 +1,15 @@
+<a class="anchor release_tag" name="v0_6_1"></a>
+<h1><a href="#v0_6_1">Tag: v0.6.1</a></h1>
+
+##### Branch: 'master'
+
+##### by Daniel Hadad on 16-May-2018 12:29PM
+
+
+Added ability to use current\_value instead of reset\_value when rendering a register
+display.
+Based on PR6 and PR7 developed by welguisz.
+
 <a class="anchor release_tag" name="v0_6_0"></a>
 <h1><a href="#v0_6_0">Tag: v0.6.0</a></h1>
 
