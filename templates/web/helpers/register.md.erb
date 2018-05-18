@@ -86,6 +86,8 @@ bit descriptions:
 <%= "%" %> end
 ~~~
 
+<%= render "templates/shared/register", :reg => $dut.reg(:mclkdiv), :descriptions => true%>
+
 ~~~eruby
 ## Register Map with Current Value
 
@@ -101,7 +103,6 @@ explicitly.  It will not match partial descriptions, e.g. value is 000
 and bitfield description is 00.
 
 
-<%= render "templates/shared/register", :reg => $dut.reg(:mclkdiv), :descriptions => true, current_value: true %>
 
 ### Additional Test Cases
 
