@@ -313,6 +313,8 @@
 % (start_bit..end_bit).each do |b|
 %  bit_val_str << reg.bits[b].data.to_s
 % end
+% # binding.pry if reg.value == 570623104
+% bit_val_str.reverse!
 % bits.description.each do |line|
 %   if options[:current_value]
 %     if line =~ /^\d{#{bit_val_str.length}}/ 
