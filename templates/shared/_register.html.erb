@@ -29,7 +29,6 @@
 %   end
 % end
 
-% # binding.pry
 % if options[:descriptions]
 <div markdown="1" style="margin: 0 0 20px 0">
 
@@ -313,7 +312,6 @@
 % (start_bit..end_bit).each do |b|
 %  bit_val_str << reg.bits[b].data.to_s
 % end
-% # binding.pry if reg.value == 570623104
 % bit_val_str.reverse!
 % bits.description.each do |line|
 %   if options[:current_value]
