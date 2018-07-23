@@ -7,6 +7,7 @@ module OrigenDocHelpers
   autoload :ListFlowFormatter, 'origen_doc_helpers/list_flow_formatter'
   autoload :FlowPageGenerator, 'origen_doc_helpers/flow_page_generator'
   autoload :ModelPageGenerator, 'origen_doc_helpers/model_page_generator'
+  autoload :GuideIndex, 'origen_doc_helpers/guide_index'
 end
 
 require 'origen_doc_helpers/helpers'

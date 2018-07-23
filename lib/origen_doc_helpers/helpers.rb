@@ -273,6 +273,13 @@ END
               options[:tab]
             else
               rel = options[:top_level_file].relative_path_from(_doc_root_dir(options)).sub_ext('').sub_ext('').to_s
+              # If the file lives outside of the current app (e.g. it comes from a plugin), then the above approach
+              # doesn't work, so let's just take the last dirname and the filename
+              if rel =~ /\.\./
+                dir = options[:top_level_file].dirname.basename
+                file = options[:top_level_file].basename('.*').basename('.*')  # twice to allow for my_file.md.erb
+                rel = "#{dir}_#{file}"
+              end
               rel.gsub(/(\/|\\)/, '_').downcase.to_sym
             end
           end
