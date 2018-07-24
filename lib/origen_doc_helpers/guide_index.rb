@@ -10,7 +10,8 @@ module OrigenDocHelpers
 
     def section(id, options = {})
       @current_section_id = id
-      @section_keys[id] = options[:heading] || id.to_s
+      @section_keys[id] ||= options[:heading] || id
+      @section_keys[id] ||= @section_keys[id].to_s if @section_keys[id]
       unless @index[section_key]
         if options[:after]
           insert_after(:@index, section_key, section_key(options[:after]), {})
@@ -26,12 +27,13 @@ module OrigenDocHelpers
       self
     end
 
-    def topic(id, options = {})
+    def page(id, options = {})
       unless @current_section
-        fail 'topic can only be called from within a section block!'
+        fail 'page can only be called from within a section block!'
       end
       @current_topic_id = id
-      value = options[:heading] || id.to_s
+      value = options[:heading] || id
+      value = value.to_s if value
       if options[:after]
         insert_after(:@current_section, topic_key, topic_key(options[:after]), value)
       elsif options[:before]
@@ -56,7 +58,11 @@ module OrigenDocHelpers
     end
 
     def topic_key(id = nil)
-      "#{@current_section_id}_#{id || @current_topic_id}".to_sym
+      if @current_section_id
+        "#{@current_section_id}_#{id || @current_topic_id}".to_sym
+      else
+        "#{id || @current_topic_id}".to_sym
+      end
     end
 
     def insert_after(var, id, after, value)

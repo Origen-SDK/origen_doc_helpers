@@ -45,17 +45,18 @@ index["Topic 1"] = {
 
 #### Guide Index API
 
-An API is available to programatically define the document index, here for the first example above:
+An API is available to programatically define the document index, here is the first example above defined
+via the API rather than creating the hash explicitly:
 
 ~~~ruby
 index = OrigenDocHelpers::GuideIndex.new
 index.section nil do |section|
-  section.topic :intro, heading: "Introduction"
-  section.topic :page2, heading: "Page 2"
+  section.page :intro, heading: "Introduction"
+  section.page :page2, heading: "Page 2"
   end
 index.section :topic1, heading: "Topic 1" do |section|
-  section.topic :item1, heading: "First Item"
-  section.topic :item2, heading: "Second Item"
+  section.page :item1, heading: "First Item"
+  section.page :item2, heading: "Second Item"
 end
 ~~~
 
@@ -64,14 +65,14 @@ On the face of it, this is just a slightly different way of writing the same thi
 using the API vs. defining the hash directly.
 
 However, the advantage of the API is that it allows the index to be defined out of order, allowing the user
-to insert entries at specific points in the lookup table. This can be useful to allow plugins to add pages to
+to insert entries at specific points in the index table. This can be useful to allow plugins to add pages to
 a parent application's guide section.
 
 This is achieved by adding `:before` and `:after` options, here for example to add a new section before "Topic 1":
 
 ~~~ruby
 index.section :topic0, heading: "Topic 0", before: :topic1 do |section|
-  section.topic :my_topic
+  section.page :my_topic
 end
 ~~~
 
@@ -79,13 +80,13 @@ or to add a new page within the "Topic 1" section:
 
 ~~~ruby
 index.section :topic1 do |section|
-  section.topic :my_topic, heading: "My Heading", after: :item1
+  section.page :my_topic, heading: "My Heading", after: :item1
 end
 ~~~
 
-Note that both the `.section` and `.topic` methods support the use of `:before` or `:after`.
+Note that both the `.section` and `.page` methods support the use of `:before` or `:after`.
 
-If neither option is given when referencing an existing `GuideIndex` instance then the new section/topic
+If neither option is given when referencing an existing `GuideIndex` instance then the new section/page
 will simply be appended onto the end.
 
 ### The Layout Helper

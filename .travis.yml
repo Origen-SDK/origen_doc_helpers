@@ -1,9 +1,10 @@
 language: ruby
 rvm:
-  - 2.1.0
   - 2.2.2
+  - 2.4.1
 script:
   - bundle exec origen -v
+  - bundle exec origen specs -c
   - bundle exec origen web compile --no-serve
   - bundle exec origen lint --no-correct
 env:

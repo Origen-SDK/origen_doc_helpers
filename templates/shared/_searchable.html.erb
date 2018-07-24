@@ -1,6 +1,7 @@
 % options[:root] ||= "docs"
 % options[:path_separator] ||= "_"
 % pdf_filename = ::OrigenDocHelpers::PDF.register(options)
+% options[:index] = options[:index].to_h
 
 <div class="row">
   <div class="col-md-3 sidebar-nav-container">

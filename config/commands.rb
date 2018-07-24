@@ -20,14 +20,14 @@ aliases ={
 # Now branch to the specific task code
 case @command
 
-# Here is an example of how to implement a command, the logic can go straight
-# in here or you can require an external file if preferred.
-when "execute"
-  puts "Executing something..."
-  require "commands/execute"    # Would load file lib/commands/execute.rb
-  # You must always exit upon successfully capturing a command to prevent 
-  # control flowing back to Origen
-  exit 0
+## Example of how to make a command to run unit tests, this simply invokes RSpec on
+## the spec directory
+when "specs"
+  ARGV.unshift "spec"
+  require "rspec"
+  require "rspec/autorun"
+  exit 0 # This will never be hit on a fail, RSpec will automatically exit 1
+
 
 # Always leave an else clause to allow control to fall back through to the
 # Origen command handler.
@@ -35,8 +35,8 @@ when "execute"
 # origen -h, you can do this be assigning the required text to @application_commands
 # before handing control back to Origen. Un-comment the example below to get started.
 else
-#  @application_commands = <<-EOT
-# execute      Execute something I guess
-#  EOT
+  @application_commands = <<-EOT
+  specs        Run the specs (tests), -c will enable coverage
+EOT
 
 end 
