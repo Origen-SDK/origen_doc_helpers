@@ -38,15 +38,21 @@ describe "The GuideIndex API" do
       section.page :mytopic
     end
 
+    index.section :topic0a, heading: "Topic 0a", after: :topic0 do |section|
+      section.page :mytopic
+    end
+
     index.to_h.should == {
-      nil       => { :intro => "Introduction",
+      nil        => { :intro => "Introduction",
                      :page2 => "Page 2"
-                   },
-      "Topic 0" => { :topic0_mytopic => "mytopic"
-                   },
-      "Topic 1" => { :topic1_item1 => "First Item",
-                     :topic1_item2 => "Second Item"
-                   }
+                    },
+      "Topic 0"  => { :topic0_mytopic => "mytopic"
+                    },
+      "Topic 0a" => { :topic0a_mytopic => "mytopic"
+                    },
+      "Topic 1"  => { :topic1_item1 => "First Item",
+                      :topic1_item2 => "Second Item"
+                    }
     }
   end
 
@@ -65,13 +71,18 @@ describe "The GuideIndex API" do
       section.page :mypage, heading: "My Page", after: :item1
     end
 
+    index.section :topic1 do |section|
+      section.page :mypage0, heading: "My Page 0", before: :mypage
+    end
+
     index.to_h.should == {
       nil       => { :intro => "Introduction",
                      :page2 => "Page 2"
                    },
-      "Topic 1" => { :topic1_item1  => "First Item",
-                     :topic1_mypage => "My Page",
-                     :topic1_item2  => "Second Item"
+      "Topic 1" => { :topic1_item1   => "First Item",
+                     :topic1_mypage0 => "My Page 0",
+                     :topic1_mypage  => "My Page",
+                     :topic1_item2   => "Second Item"
                    }
     }
   end
