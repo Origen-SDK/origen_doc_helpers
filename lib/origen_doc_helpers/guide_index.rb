@@ -6,24 +6,59 @@ module OrigenDocHelpers
     def initialize
       @index = {}
       @section_keys = {}
+      @pending_sections = []
+      @pending_pages = []
     end
 
-    def section(id, options = {})
+    def section(id, options = {}, &block)
       @current_section_id = id
-      @section_keys[id] ||= options[:heading] || id
+      if options[:heading]
+        # This is to handle the corner case where an id reference was originally supplied
+        # without the heading, then a later reference added the heading
+        if @section_keys[id]
+          if @section_keys[id] != options[:heading]
+            change_key(:@index, @section_keys[id], options[:heading])
+            @section_keys[id] = options[:heading]
+          end
+        else
+          @section_keys[id] = options[:heading]
+        end
+      else
+        @section_keys[id] ||= id
+      end
       @section_keys[id] ||= @section_keys[id].to_s if @section_keys[id]
+      section_pending = false
       unless @index[section_key]
         if options[:after]
-          insert_after(:@index, section_key, section_key(options[:after]), {})
+          if has_key?(:@index, section_key(options[:after]))
+            insert_after(:@index, section_key, section_key(options[:after]), {})
+          else
+            @pending_sections << [id, options.dup, block] unless @no_pending
+            section_pending = true
+          end
         elsif options[:before]
-          insert_before(:@index, section_key, section_key(options[:before]), {})
+          if has_key?(:@index, section_key(options[:before]))
+            insert_before(:@index, section_key, section_key(options[:before]), {})
+          else
+            @pending_sections << [id, options.dup, block] unless @no_pending
+            section_pending = true
+          end
         else
           @index[section_key] = {}
         end
       end
       @current_section = @index[section_key]
-      yield self
+      yield self unless section_pending
       @current_section = nil
+
+      # See if any pending sections can now be inserted
+      unless @no_pending
+        @pending_sections.each do |id, opts, blk|
+          @no_pending = true
+          section(id, opts, &blk)
+          @no_pending = false
+        end
+      end
       self
     end
 
@@ -34,16 +69,37 @@ module OrigenDocHelpers
       @current_topic_id = id
       value = options[:heading] || id
       value = value.to_s if value
+      page_pending = false
       if options[:after]
-        insert_after(:@current_section, topic_key, topic_key(options[:after]), value)
+        if has_key?(:@current_section, topic_key(options[:after]))
+          insert_after(:@current_section, topic_key, topic_key(options[:after]), value)
+        else
+          @pending_pages << [id, options.dup] unless @no_page_pending
+          page_pending = true
+        end
       elsif options[:before]
-        insert_before(:@current_section, topic_key, topic_key(options[:before]), value)
+        if has_key?(:@current_section, topic_key(options[:before]))
+          insert_before(:@current_section, topic_key, topic_key(options[:before]), value)
+        else
+          @pending_pages << [id, options.dup] unless @no_page_pending
+          page_pending = true
+        end
       else
         @current_section[topic_key] = value
       end
       # Update the parent reference, required if before or after was used to create a new
       # @current_section hash
-      @index[section_key] = @current_section
+      @index[section_key] = @current_section unless page_pending
+
+      # See if any pending pages can now be inserted
+      unless @no_page_pending
+        @pending_pages.each do |id, opts|
+          @no_page_pending = true
+          page(id, opts)
+          @no_page_pending = false
+        end
+      end
+
       self
     end
 
@@ -63,6 +119,22 @@ module OrigenDocHelpers
       else
         "#{id || @current_topic_id}".to_sym
       end
+    end
+
+    def has_key?(var, id)
+      instance_variable_get(var).key?(id)
+    end
+
+    def change_key(var, existing, new)
+      h = {}
+      instance_variable_get(var).each do |key, val|
+        if key == existing
+          h[new] = val
+        else
+          h[key] = val
+        end
+      end
+      instance_variable_set(var, h)
     end
 
     def insert_after(var, id, after, value)
