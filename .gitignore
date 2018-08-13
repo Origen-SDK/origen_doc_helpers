@@ -1,3 +1,7 @@
+# Misc
+.irb_history
+.byebug_history
+
 # Editor cruft
 *.swp
 *.swo
@@ -26,7 +30,6 @@
 /.collection
 /.bin
 /.session
-/.pdm/pi_attributes.txt
 /tmp
 
 # Cruft from other revision control systems
