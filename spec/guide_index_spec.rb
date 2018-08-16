@@ -155,4 +155,36 @@ describe "The GuideIndex API" do
     }
   end
 
+  it 'pending sections can be forced' do
+    index = OrigenDocHelpers::GuideIndex.new
+
+    index.section :topic1, heading: "Topic 1" do |section|
+      section.page :item1, heading: "First Item"
+      section.page :item2, heading: "Second Item"
+    end
+
+    index.section :topic0a, heading: "Topic 0a", after: :topic0 do |section|
+      section.page :mytopic
+    end
+
+    index.section :topic1 do |section|
+      section.page :mypage0, heading: "My Page 0", before: :mypage
+    end
+
+    index.to_h.should == {
+      "Topic 1" => { :topic1_item1   => "First Item",
+                     :topic1_item2   => "Second Item"
+                   }
+    }
+
+    index.force_pending.to_h.should == {
+      "Topic 1"  => { :topic1_item1   => "First Item",
+                      :topic1_item2   => "Second Item",
+                      :topic1_mypage0 => "My Page 0"
+                    },
+      "Topic 0a" => { :topic0a_mytopic => "mytopic"
+                    }
+    }
+  end
+
 end

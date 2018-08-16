@@ -10,6 +10,23 @@ module OrigenDocHelpers
       @pending_pages = []
     end
 
+    # Force any pending sections and pages into the index, these will be added
+    # at the end since their :after/:before reference is not valid
+    def force_pending
+      @force_pending = true
+      @pending_sections.each do |id, opts, blk|
+        section(id, opts, &blk)
+      end
+      @pending_pages.each do |section_id, id, opts|
+        @current_section_id = section_id
+        @current_section = @index[section_key]
+        page(id, opts)
+      end
+
+      @force_pending = nil
+      self
+    end
+
     def section(id, options = {}, &block)
       @current_section_id = id
       if options[:heading]
@@ -29,14 +46,14 @@ module OrigenDocHelpers
       @section_keys[id] ||= @section_keys[id].to_s if @section_keys[id]
       section_pending = false
       unless @index[section_key]
-        if options[:after]
+        if options[:after] && !@force_pending
           if has_key?(:@index, section_key(options[:after]))
             insert_after(:@index, section_key, section_key(options[:after]), {})
           else
             @pending_sections << [id, options.dup, block] unless @no_pending
             section_pending = true
           end
-        elsif options[:before]
+        elsif options[:before] && !@force_pending
           if has_key?(:@index, section_key(options[:before]))
             insert_before(:@index, section_key, section_key(options[:before]), {})
           else
@@ -52,7 +69,7 @@ module OrigenDocHelpers
       @current_section = nil
 
       # See if any pending sections can now be inserted
-      unless @no_pending
+      unless @no_pending || @force_pending
         @pending_sections.each do |id, opts, blk|
           @no_pending = true
           section(id, opts, &blk)
@@ -70,18 +87,18 @@ module OrigenDocHelpers
       value = options[:heading] || id
       value = value.to_s if value
       page_pending = false
-      if options[:after]
+      if options[:after] && !@force_pending
         if has_key?(:@current_section, topic_key(options[:after]))
           insert_after(:@current_section, topic_key, topic_key(options[:after]), value)
         else
-          @pending_pages << [id, options.dup] unless @no_page_pending
+          @pending_pages << [@current_section_id, id, options.dup] unless @no_page_pending
           page_pending = true
         end
-      elsif options[:before]
+      elsif options[:before] && !@force_pending
         if has_key?(:@current_section, topic_key(options[:before]))
           insert_before(:@current_section, topic_key, topic_key(options[:before]), value)
         else
-          @pending_pages << [id, options.dup] unless @no_page_pending
+          @pending_pages << [@current_section_id, id, options.dup] unless @no_page_pending
           page_pending = true
         end
       else
@@ -92,8 +109,8 @@ module OrigenDocHelpers
       @index[section_key] = @current_section unless page_pending
 
       # See if any pending pages can now be inserted
-      unless @no_page_pending
-        @pending_pages.each do |id, opts|
+      unless @no_page_pending || @force_pending
+        @pending_pages.each do |section_id, id, opts|
           @no_page_pending = true
           page(id, opts)
           @no_page_pending = false

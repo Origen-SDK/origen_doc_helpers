@@ -1,7 +1,11 @@
 % options[:root] ||= "docs"
 % options[:path_separator] ||= "_"
 % pdf_filename = ::OrigenDocHelpers::PDF.register(options)
-% options[:index] = options[:index].to_h
+% if options[:index].is_a?(OrigenDocHelpers::GuideIndex)
+%   options[:index] = options[:index].force_pending.to_h
+% else
+%   options[:index] = options[:index].to_h
+% end
 
 <div class="row">
   <div class="col-md-3 sidebar-nav-container">
