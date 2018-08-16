@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    origen_doc_helpers (0.7.0)
+    origen_doc_helpers (0.7.1)
       origen (>= 0.7.15)
 
 GEM
@@ -182,4 +182,4 @@ DEPENDENCIES
   ripper-tags
 
 BUNDLED WITH
-   1.16.1
+   1.16.3
