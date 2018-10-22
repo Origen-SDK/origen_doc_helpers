@@ -43,15 +43,24 @@
 % num_bytes.times do |byte_index|
 %   # Need to add support for little endian regs here?
 %   byte_number = num_bytes - byte_index
-%   max_bit = (byte_number * 8) - 1
-%   min_bit = max_bit - 8 + 1
+%   if reg.bit_order == :lsb0
+%     max_bit = (byte_number * 8) - 1
+%     min_bit = max_bit - 8 + 1
+%   else
+%     min_bit = (byte_index * 8)
+%     max_bit = min_bit + 7
+%   end
 
 <table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
   <thead>
     <tr class="bit-positions">
       <th class="spacer"></th>
 % 8.times do |i|
-%   bit_num = (byte_number * 8) - i - 1
+%   if reg.bit_order == :lsb0
+%     bit_num = (byte_number * 8) - i - 1
+%   else
+%     bit_num = (byte_index * 8) + i
+%   end
 %   if bit_num > reg.size - 1
       <th class="spacer"></th>
 %   else
