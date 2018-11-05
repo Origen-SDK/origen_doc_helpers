@@ -78,6 +78,21 @@ module OrigenDocHelpersDev
         reg :debug_22, 0xf54, 32, bit_order: 'lsb0', ip_base_address: 0x1080000, description: '' do
           bit 31..0, :placeholder, reset: 0b0, access: :rw
         end
+        reg :msb0_debug, 0xf58, 32, bit_order: 'msb0', ip_base_address: 0x1080000, description: '' do
+          bit 31..0, :placeholder, reset: 0b0, access: :rw
+        end
+        reg :lsb0_non_byte_aligned, 0xf5c, 9, bit_order: 'lsb0', ip_base_address: 0x1080000, description: '' do
+          bit 8..0, :placeholder, reset: 0b0, access: :rw
+        end
+        reg :msb0_non_byte_aligned, 0xf60, 9, bit_order: :msb0, ip_base_address: 0x1080000, description: '' do
+          bit 8..0, :placeholder, reset: 0b0, access: :rw
+        end
+        reg :lsb0_tiny, 0xf64, 3, bit_order: :lsb0, ip_base_address: 0x1080000, description: '' do
+          bit 2..0, :placeholder, reset: 0b0, access: :rw
+        end
+        reg :msb0_tiny, 0xf68, 3, bit_order: :msb0, ip_base_address: 0x1080000, description: '' do
+          bit 2..0, :placeholder, reset: 0b0, access: :rw
+        end
       end
     end
 
