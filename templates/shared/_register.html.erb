@@ -52,8 +52,9 @@
 %     min_bit = (byte_index * 8)
 %     max_bit = min_bit + 7
 %   end
+%   partial_byte = max_bit > (reg.size - 1)
 
-<table class="reg table table-condensed" style="margin-bottom: 0; table-layout: fixed;">
+<table class="reg table table-condensed <%= order_is_lsb0 ? 'rjust' : 'ljust' %><%= partial_byte ? ' partial' : '' %>" style="margin-bottom: 0; table-layout: fixed;">
   <thead>
     <tr class="bit-positions">
       <th class="spacer"></th>
@@ -66,7 +67,7 @@
 %   if bit_num > reg.size - 1
       <th class="spacer"></th>
 %   else
-      <th class="bit-position"><%= bit_num %></th>
+      <th class="bit-position<%= !order_is_lsb0 && bit_num == reg.size - 1 ? ' last' : '' %>"><%= bit_num %></th>
 %   end
 % end
     </tr>
@@ -78,7 +79,7 @@
 %#############################################    
     <tr class="read">
       <td class="heading">R</td>
-% alignment_done = order_is_lsb0 ? false : true
+% alignment_done = !order_is_lsb0
 % reg.named_bits :include_spacers => true do |name, bit|
 %  if _bit_in_range?(bit, max_bit, min_bit)
 %   if max_bit > (reg.size - 1) && !alignment_done
@@ -144,7 +145,7 @@
 %#############################################    
     <tr class="write">
       <td class="heading">W</td>
-% alignment_done = order_is_lsb0 ? false : true
+% alignment_done = !order_is_lsb0
 % reg.named_bits :include_spacers => true do |name, bit|
 %  if _bit_in_range?(bit, max_bit, min_bit)
 %   if max_bit > (reg.size - 1) && !alignment_done
@@ -202,7 +203,7 @@
 % if options[:current_value]
     <tr class="current_value">
       <td class="heading">Current Value (Hex)</td>
-%   alignment_done = order_is_lsb0 ? false : true
+%   alignment_done = !order_is_lsb0
 %   reg.named_bits :include_spacers => true do |name, bit|
 %     if _bit_in_range?(bit, max_bit, min_bit)
 %       if max_bit > (reg.size - 1) && !alignment_done
@@ -245,7 +246,7 @@
 %#############################################    
     <tr class="reset">
       <td class="heading">Reset</td>
-%   alignment_done = order_is_lsb0 ? false : true
+%   alignment_done = !order_is_lsb0
 %   reg.named_bits :include_spacers => true do |name, bit|
 %   if _bit_in_range?(bit, max_bit, min_bit)
 %     if max_bit > (reg.size - 1) && !alignment_done
