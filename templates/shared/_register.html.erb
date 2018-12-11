@@ -320,16 +320,16 @@
         <p>
           <a class="anchor" name="<%= "#{reg.name}_#{name}_#{bits.position}" %>"></a>
 % if bits.size == 1        
-          <%= bits.position %><%= order_is_lsb0 ? '' : " (#{reg.size - bits.position - 1})" %>
+          <%= bits.position %><%= order_is_lsb0 ? '' : "<span class=\"msb0_specific\" style=\"color:gray;\"> (#{reg.size - bits.position - 1})</span>" %>
 % else
-          <%= bits.position + bits.size - 1 %>-<%= bits.position %><%= order_is_lsb0 ? '' : " (#{reg.size - bits.position - bits.size}-#{reg.size - bits.position - 1})" %>
+          <%= bits.position + bits.size - 1 %>-<%= bits.position %><%= order_is_lsb0 ? '' : "<span class=\"msb0_specific\" style=\"color:gray;\"> (#{reg.size - bits.position - bits.size}-#{reg.size - bits.position - 1})</span>" %>
 % end
         </p>
         <p>
 % if bits.size == 1        
           <%= name %>
 % else
-          <%= name %>[<%= bits.size - 1 %>:0]<%= order_is_lsb0 ? '' : " ([0:#{bits.size - 1}])" %>
+          <%= name %>[<%= bits.size - 1 %>:0]<%= order_is_lsb0 ? '' : "<span class=\"msb0_specific\" style=\"color:gray;\"> ([0:#{bits.size - 1}])</span>" %>
 % end
         </p>
       </td>
