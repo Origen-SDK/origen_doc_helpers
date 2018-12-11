@@ -14,19 +14,12 @@
 %   reg_path = reg.name
 % end
 % if reg.full_name
-%   if order_is_lsb0
 <h4>0x<%= reg.address.to_s(16).upcase %> - <%= reg.full_name %> (<%= reg_path %>)</h4>
-%   else
-<h4>0x<%= reg.address.to_s(16).upcase %> - <%= reg.full_name %> (<%= reg_path %>)<span class="msb0_specific"> <%= "#{reg_path}.with_msb0"%>(to access using MSB0 numbering)</span></h4>
-%   end
 % else
-%   if order_is_lsb0
 <h4>0x<%= reg.address.to_s(16).upcase %> - <%= reg_path %></h4>
-%   else
-<h4>0x<%= reg.address.to_s(16).upcase %> - <%= reg_path %><span class="msb0_specific"> <%= "#{reg_path}.with_msb0"%>(to access using MSB0 numbering)</span></h4>
-%   end
 % end
 </a>
+
 % if options[:current_value]
 %   if reg.size <= 8
 <h4><font style="background-color: #66FF66">Current Value: <%= sprintf("0x%02X",reg.value) %></font></h4>
@@ -47,6 +40,16 @@
 % end
 
 </div>
+% end
+
+% if !order_is_lsb0
+<table class="reg table table-condensed ljust" style="margin-bottom: 0; table-layout: fixed;">
+  <thead>
+    <tr class="bit-positions">
+      <b><tr class = "heading"><%= reg_path%> <span class="msb0_specific" style="color:gray;">(<%= reg_path %>.with_msb0)</span></tr></b>
+    </tr>
+  </thead>
+</table>
 % end
 
 % num_bytes = (reg.size / 8.0).ceil
