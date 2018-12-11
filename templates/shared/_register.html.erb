@@ -60,7 +60,11 @@
 <table class="reg table table-condensed <%= 'rjust' %><%= partial_byte ? ' partial' : '' %>" style="margin-bottom: 0; table-layout: fixed;">
   <thead>
     <tr class="bit-positions">
+% if order_is_lsb0
       <th class="spacer"></th>
+% else
+      <td class="heading">LSB0<span class="msb0_specific" style="color:red;"> (MSB0)</span></td>
+% end
 
 % 8.times do |i|
 %   bit_num = (byte_number * 8) - i - 1
@@ -70,7 +74,7 @@
 %     if order_is_lsb0
       <th class="bit-position"><%= bit_num %></th>
 %     else
-      <th class="bit-position"><%= bit_num %><span class="msb0_specific"> (<%= reg.size - bit_num -1%>)</span></th>
+      <th class="bit-position"><%= bit_num %><span class="msb0_specific" style="color:red;"> (<%= reg.size - bit_num -1%>)</span></th>
 %     end
 %   end
 % end
@@ -85,7 +89,7 @@
 % if order_is_lsb0
       <td class="heading">R</td>
 % else
-      <td class="heading">R<span class="msb0_specific"> [LSB0]</span></td>
+      <td class="heading"><span class="msb0_specific" style="color:red;">[LSB0] </span>R</td>
 % end
 
 % alignment_done = false
