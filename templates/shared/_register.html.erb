@@ -63,7 +63,7 @@
 % if order_is_lsb0
       <th class="spacer"></th>
 % else
-      <td class="heading">LSB0<span class="msb0_specific" style="color:red;"> (MSB0)</span></td>
+      <td class="heading">LSB0<span class="msb0_specific" style="color:gray;"> (MSB0)</span></td>
 % end
 
 % 8.times do |i|
@@ -74,7 +74,7 @@
 %     if order_is_lsb0
       <th class="bit-position"><%= bit_num %></th>
 %     else
-      <th class="bit-position"><%= bit_num %><span class="msb0_specific" style="color:red;"> (<%= reg.size - bit_num -1%>)</span></th>
+      <th class="bit-position"><%= bit_num %><span class="msb0_specific" style="color:gray;"> (<%= reg.size - bit_num -1%>)</span></th>
 %     end
 %   end
 % end
@@ -89,7 +89,7 @@
 % if order_is_lsb0
       <td class="heading">R</td>
 % else
-      <td class="heading"><span class="msb0_specific" style="color:red;">[LSB0] </span>R</td>
+      <td class="heading"><span class="msb0_specific" style="color:gray;">[LSB0] </span>R</td>
 % end
 
 % alignment_done = false
