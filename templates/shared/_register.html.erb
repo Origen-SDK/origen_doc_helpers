@@ -19,6 +19,7 @@
 <h4>0x<%= reg.address.to_s(16).upcase %> - <%= reg_path %></h4>
 % end
 </a>
+
 % if options[:current_value]
 %   if reg.size <= 8
 <h4><font style="background-color: #66FF66">Current Value: <%= sprintf("0x%02X",reg.value) %></font></h4>
@@ -41,33 +42,43 @@
 </div>
 % end
 
+% if !order_is_lsb0
+<table class="reg table table-condensed ljust" style="margin-bottom: 0; table-layout: fixed;">
+  <thead>
+    <tr class="bit-positions">
+      <b><tr class = "heading"><%= reg_path%> <span class="msb0_specific" style="color:gray;">(<%= reg_path %>.with_msb0)</span></tr></b>
+    </tr>
+  </thead>
+</table>
+% end
+
 % num_bytes = (reg.size / 8.0).ceil
 % num_bytes.times do |byte_index|
 %   # Need to add support for little endian regs here?
 %   byte_number = num_bytes - byte_index
-%   if order_is_lsb0
-%     max_bit = (byte_number * 8) - 1
-%     min_bit = max_bit - 8 + 1
-%   else
-%     min_bit = (byte_index * 8)
-%     max_bit = min_bit + 7
-%   end
+%   max_bit = (byte_number * 8) - 1
+%   min_bit = max_bit - 8 + 1
 %   partial_byte = max_bit > (reg.size - 1)
 
-<table class="reg table table-condensed <%= order_is_lsb0 ? 'rjust' : 'ljust' %><%= partial_byte ? ' partial' : '' %>" style="margin-bottom: 0; table-layout: fixed;">
+<table class="reg table table-condensed <%= 'rjust' %><%= partial_byte ? ' partial' : '' %>" style="margin-bottom: 0; table-layout: fixed;">
   <thead>
     <tr class="bit-positions">
+% if order_is_lsb0
       <th class="spacer"></th>
+% else
+      <td class="heading">LSB0<span class="msb0_specific" style="color:gray;"> (MSB0)</span></td>
+% end
+
 % 8.times do |i|
-%   if order_is_lsb0
-%     bit_num = (byte_number * 8) - i - 1
-%   else
-%     bit_num = (byte_index * 8) + i
-%   end
+%   bit_num = (byte_number * 8) - i - 1
 %   if bit_num > reg.size - 1
       <th class="spacer"></th>
 %   else
-      <th class="bit-position<%= !order_is_lsb0 && bit_num == reg.size - 1 ? ' last' : '' %>"><%= bit_num %></th>
+%     if order_is_lsb0
+      <th class="bit-position"><%= bit_num %></th>
+%     else
+      <th class="bit-position"><%= bit_num %><span class="msb0_specific" style="color:gray;"> (<%= reg.size - bit_num -1%>)</span></th>
+%     end
 %   end
 % end
     </tr>
@@ -78,8 +89,13 @@
 %#  Read Row
 %#############################################    
     <tr class="read">
+% if order_is_lsb0
       <td class="heading">R</td>
-% alignment_done = !order_is_lsb0
+% else
+      <td class="heading"><span class="msb0_specific" style="color:gray;">[LSB0] </span>R</td>
+% end
+
+% alignment_done = false
 % reg.named_bits :include_spacers => true do |name, bit|
 %  if _bit_in_range?(bit, max_bit, min_bit)
 %   if max_bit > (reg.size - 1) && !alignment_done
@@ -145,7 +161,7 @@
 %#############################################    
     <tr class="write">
       <td class="heading">W</td>
-% alignment_done = !order_is_lsb0
+% alignment_done = false
 % reg.named_bits :include_spacers => true do |name, bit|
 %  if _bit_in_range?(bit, max_bit, min_bit)
 %   if max_bit > (reg.size - 1) && !alignment_done
@@ -246,7 +262,7 @@
 %#############################################    
     <tr class="reset">
       <td class="heading">Reset</td>
-%   alignment_done = !order_is_lsb0
+%   alignment_done = false
 %   reg.named_bits :include_spacers => true do |name, bit|
 %   if _bit_in_range?(bit, max_bit, min_bit)
 %     if max_bit > (reg.size - 1) && !alignment_done
@@ -304,16 +320,16 @@
         <p>
           <a class="anchor" name="<%= "#{reg.name}_#{name}_#{bits.position}" %>"></a>
 % if bits.size == 1        
-          <%= bits.position %>
+          <%= bits.position %><%= order_is_lsb0 ? '' : "<span class=\"msb0_specific\" style=\"color:gray;\"> (#{reg.size - bits.position - 1})</span>" %>
 % else
-          <%= bits.position + bits.size - 1 %>-<%= bits.position %>
+          <%= bits.position + bits.size - 1 %>-<%= bits.position %><%= order_is_lsb0 ? '' : "<span class=\"msb0_specific\" style=\"color:gray;\"> (#{reg.size - bits.position - bits.size}-#{reg.size - bits.position - 1})</span>" %>
 % end
         </p>
         <p>
 % if bits.size == 1        
           <%= name %>
 % else
-          <%= name %>[<%= bits.size - 1 %>:0]
+          <%= name %>[<%= bits.size - 1 %>:0]<%= order_is_lsb0 ? '' : "<span class=\"msb0_specific\" style=\"color:gray;\"> ([0:#{bits.size - 1}])</span>" %>
 % end
         </p>
       </td>
