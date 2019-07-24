@@ -90,8 +90,6 @@ GEM
       require_all (~> 1)
       rodf (~> 1)
       sexpistol (~> 0.0)
-    origen_updater (0.7.0)
-      origen
     parser (2.6.3.0)
       ast (~> 2.4.0)
     polyglot (0.3.5)
@@ -157,7 +155,6 @@ DEPENDENCIES
   coveralls
   origen_doc_helpers!
   origen_testers
-  origen_updater
   ripper-tags
 
 BUNDLED WITH
