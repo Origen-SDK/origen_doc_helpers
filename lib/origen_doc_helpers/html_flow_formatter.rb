@@ -1,7 +1,11 @@
-require 'atp'
+begin
+  require 'origen_testers/atp'
+rescue LoadError
+  require 'atp'
+end
 require 'kramdown'
 module OrigenDocHelpers
-  class HtmlFlowFormatter < ATP::Formatter
+  class HtmlFlowFormatter < (defined?(OrigenTesters::ATP) ? OrigenTesters::ATP::Formatter : ATP::Formatter)
     include Origen::Generator::Compiler::DocHelpers::TestFlowHelpers
 
     attr_reader :html
