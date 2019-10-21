@@ -92,10 +92,19 @@ module OrigenDocHelpers
         else
           origen_path = options[:origen_path] + ".#{name}"
         end
-        create_page block,
-                    breadcrumbs: options[:breadcrumbs] + [[name, path]],
-                    path:        path,
-                    origen_path: origen_path
+        begin
+          create_page block,
+                      breadcrumbs: options[:breadcrumbs] + [[name, path]],
+                      path:        path,
+                      origen_path: origen_path
+        rescue Exception => e
+          Origen.log.error "Exception occurred while generating model for #{name}: "
+          Origen.log.error "  #{e.class}"
+          Origen.log.error "  #{e.message}"
+          e.backtrace.each do |m|
+            Origen.log.error "  #{m}"
+          end
+        end
       end
     end
 

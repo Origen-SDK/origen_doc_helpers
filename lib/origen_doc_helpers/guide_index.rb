@@ -1,7 +1,7 @@
 module OrigenDocHelpers
   # Provides an API to programatically construct an index hash as used
   # by the Searchable Documents helper -
-  # http://origen-sdk.org/doc_helpers/helpers/searchable/intro/#The_Document_Index
+  # https://origen-sdk.org/doc_helpers/helpers/searchable/intro/#The_Document_Index
   class GuideIndex
     def initialize
       @index = {}

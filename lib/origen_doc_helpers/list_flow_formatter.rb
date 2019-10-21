@@ -1,6 +1,10 @@
-require 'atp'
+begin
+  require 'origen_testers/atp'
+rescue LoadError
+  require 'atp'
+end
 module OrigenDocHelpers
-  class ListFlowFormatter < ATP::Formatter
+  class ListFlowFormatter < (defined?(OrigenTesters::ATP) ? OrigenTesters::ATP::Formatter : ATP::Formatter)
     attr_reader :html
 
     def format(node, options = {})
