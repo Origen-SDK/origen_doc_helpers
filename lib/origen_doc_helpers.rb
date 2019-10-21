@@ -8,8 +8,8 @@ module OrigenDocHelpers
   autoload :FlowPageGenerator, 'origen_doc_helpers/flow_page_generator'
   autoload :ModelPageGenerator, 'origen_doc_helpers/model_page_generator'
   autoload :GuideIndex, 'origen_doc_helpers/guide_index'
-  autoload :DependencyPageGenerator, 'origen_doc_helpers/generators/dependency_page_generator'
-  autoload :DependencyDropdownGenerator, 'origen_doc_helpers/generators/dependency_dropdown_generator'
+  autoload :DependenciesPageGenerator, 'origen_doc_helpers/generators/dependency_page_generator'
+  autoload :DependenciesDropdownGenerator, 'origen_doc_helpers/generators/dependency_dropdown_generator'
 end
 
 require 'origen_doc_helpers/helpers'
@@ -23,11 +23,15 @@ module OrigenDocHelpers
     ModelPageGenerator.run(options, &block)
   end
 
-  def self.generate_dependency_docs(options = {}, &block)
+  def self.generate_dependencies_doc(options = {}, &block)
     DependencyPageGenerator.run(options, &block)
   end
 
-  def self.generate_dependency_dropdown(options = {}, &block)
-    DependencyDropdownGenerator.run(options, &block)
+  def self.generate_dependencies_dropdown(options = {})
+    DependenciesDropdownGenerator.run(options)
+  end
+  
+  def self.generate_dependencies_navbar(options = {})
+    DependenciesDropdownGenerator.run(options)
   end
 end
