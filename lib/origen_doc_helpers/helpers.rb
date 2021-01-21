@@ -272,7 +272,11 @@ END
             if options[:tab]
               options[:tab]
             else
-              rel = options[:top_level_file].relative_path_from(_doc_root_dir(options)).sub_ext('').sub_ext('').to_s
+              rel = begin
+                  options[:top_level_file].relative_path_from(_doc_root_dir(options)).sub_ext('').sub_ext('').to_s
+                rescue
+                  '..'
+                end
               # If the file lives outside of the current app (e.g. it comes from a plugin), then the above approach
               # doesn't work, so let's just take the last dirname and the filename
               if rel =~ /\.\./
