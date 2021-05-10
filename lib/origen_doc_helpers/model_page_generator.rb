@@ -43,7 +43,11 @@ module OrigenDocHelpers
       end
 
       def index_page_template
-        @index_page_template ||= "#{Origen.root!}/templates/model_index.md.erb"
+        if File.exist?("#{Origen.root}/app/")
+          @index_page_template ||= "#{Origen.root!}/app/templates/model_index.md.erb"
+        else
+          @index_page_template ||= "#{Origen.root!}/templates/model_index.md.erb"
+        end
       end
     end
 
@@ -156,7 +160,11 @@ module OrigenDocHelpers
     end
 
     def model_page_template
-      @model_page_template ||= "#{Origen.root!}/templates/model_page.md.erb"
+      if File.exist?("#{Origen.root}/app/")
+        @model_page_template ||= "#{Origen.root!}/app/templates/model_page.md.erb"
+      else
+        @model_page_template ||= "#{Origen.root!}/templates/model_page.md.erb"
+      end
     end
   end
 end

@@ -25,7 +25,11 @@ module OrigenDocHelpers
       @index = options[:index]
       @root = Pathname.new(options[:root])
       if @root.absolute?
-        @root = @root.relative_path_from(Pathname.new("#{Origen.root}/templates/web"))
+        if File.exist?("#{Origen.root}/app/")
+          @root = @root.relative_path_from(Pathname.new("#{Origen.root}/app/templates/web"))
+        else
+          @root = @root.relative_path_from(Pathname.new("#{Origen.root}/templates/web"))
+        end
       end
       require 'nokogiri'
     end
@@ -71,6 +75,7 @@ module OrigenDocHelpers
         end
       end
       cmd += "#{pdf_output_dir}/#{filename}"
+puts "cmd=#{cmd}"
       system cmd
     end
 
@@ -116,7 +121,11 @@ module OrigenDocHelpers
     end
 
     def topic_wrapper_string
-      @topic_wrapper_string ||= File.read("#{Origen.root!}/templates/pdf/topic_wrapper.html")
+      if File.exist?("#{Origen.root}/app/")
+        @topic_wrapper_string ||= File.read("#{Origen.root!}/app/templates/pdf/topic_wrapper.html")
+      else
+        @topic_wrapper_string ||= File.read("#{Origen.root!}/templates/pdf/topic_wrapper.html")
+      end
     end
   end
 end
