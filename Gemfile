@@ -2,8 +2,6 @@ source 'http://rubygems.org'
 
 # Only development dependencies (things your plugin needs only when it is running in its own workspace)
 # should be listed here in the Gemfile
-# This gem provides integration with https://coveralls.io/ to monitor
-# your application's test coverage
 gem 'byebug', '<9.1.0' # This version restriction required if you need Ruby < 2.2, otherwise you can remove it
 gem 'ripper-tags'
 gem 'origen_testers'
