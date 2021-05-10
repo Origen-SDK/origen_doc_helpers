@@ -1,4 +1,4 @@
-name: Origen Core Regression Tests
+name: Origen Doc Helpers Regression Tests
 on: [push, pull_request]
 jobs:
   build:
