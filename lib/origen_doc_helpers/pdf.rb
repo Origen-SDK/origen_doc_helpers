@@ -75,7 +75,6 @@ module OrigenDocHelpers
         end
       end
       cmd += "#{pdf_output_dir}/#{filename}"
-puts "cmd=#{cmd}"
       system cmd
     end
 
