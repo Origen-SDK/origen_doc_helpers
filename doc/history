@@ -1,3 +1,13 @@
+<a class="anchor release_tag" name="v0_8_4"></a>
+<h1><a href="#v0_8_4">Tag: v0.8.4</a></h1>
+
+##### Branch: 'master'
+
+##### by Daniel Hadad on 11-May-2021 08:52AM
+
+
+Fix for Issue #19: to support new Origen app dir structure.
+
 <a class="anchor release_tag" name="v0_8_3"></a>
 <h1><a href="#v0_8_3">Tag: v0.8.3</a></h1>
 
