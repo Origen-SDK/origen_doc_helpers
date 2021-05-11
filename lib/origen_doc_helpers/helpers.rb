@@ -257,7 +257,11 @@ END
             @_doc_root_dirs ||= {}
             return @_doc_root_dirs[f] if @_doc_root_dirs[f]
             unless File.exist?(f)
-              f = Pathname.new("#{Origen.root}/templates/web/#{f}")
+              if File.exist?("#{Origen.root}/app/")
+                f = Pathname.new("#{Origen.root}/app/templates/web/#{f}")
+              else
+                f = Pathname.new("#{Origen.root}/templates/web/#{f}")
+              end
               unless f.exist?
                 fail "#{options[:root]} does not exist!"
               end
@@ -289,7 +293,11 @@ END
           end
 
           def _root_path(options)
-            root = Pathname.new("#{Origen.root}/templates/web")
+            if File.exist?("#{Origen.root}/app/templates/web")
+              root = Pathname.new("#{Origen.root}/app/templates/web")
+            else
+              root = Pathname.new("#{Origen.root}/templates/web")
+            end
             _doc_root_dir(options).relative_path_from(root)
           end
         end

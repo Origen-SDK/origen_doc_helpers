@@ -44,7 +44,11 @@ module OrigenDocHelpers
       end
 
       def index_page_template
-        @index_page_template ||= "#{Origen.root!}/templates/flow_index.md.erb"
+        if File.exist?("#{Origen.root}/app/")
+          @index_page_template ||= "#{Origen.root!}/app/templates/flow_index.md.erb"
+        else
+          @index_page_template ||= "#{Origen.root!}/templates/flow_index.md.erb"
+        end
       end
     end
 
@@ -100,11 +104,19 @@ module OrigenDocHelpers
     end
 
     def flow_page_template
-      @flow_page_template ||= "#{Origen.root!}/templates/flow_page.md.erb"
+      if File.exist?("#{Origen.root}/app/")
+        @flow_page_template ||= "#{Origen.root!}/app/templates/flow_page.md.erb"
+      else
+        @flow_page_template ||= "#{Origen.root!}/templates/flow_page.md.erb"
+      end
     end
 
     def flow_template
-      @flow_template ||= "#{Origen.root!}/templates/shared/test/_flow.md.erb"
+      if File.exist?("#{Origen.root}/app/")
+        @flow_template ||= "#{Origen.root!}/app/templates/shared/test/_flow.md.erb"
+      else
+        @flow_template ||= "#{Origen.root!}/templates/shared/test/_flow.md.erb"
+      end
     end
   end
 end
