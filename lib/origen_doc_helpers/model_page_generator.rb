@@ -4,6 +4,7 @@ module OrigenDocHelpers
       attr_accessor :layout_options
       attr_accessor :layout
       attr_reader :pages
+      attr_accessor :target_as_id
 
       def run(options)
         @pages = {}
@@ -148,11 +149,20 @@ module OrigenDocHelpers
     end
 
     def id
-      @id ||= model.class.to_s.symbolize.to_s.gsub('::', '_')
+      if :target_as_id
+        @id ||= "#{Origen.target.name.downcase}" # _#{model.class.to_s.symbolize.to_s.gsub('::', '_')}"
+      else
+        @id ||= model.class.to_s.symbolize.to_s.gsub('::', '_')
+      end
     end
 
     def heading
-      model.class.to_s
+      if :target_as_id
+        @id.upcase
+        # Origen.target.name.to_s.upcase
+      else
+        model.class.to_s
+      end
     end
 
     def output_path
