@@ -159,7 +159,6 @@ module OrigenDocHelpers
     def heading
       if :target_as_id
         @id.upcase
-        # Origen.target.name.to_s.upcase
       else
         model.class.to_s
       end
