@@ -79,6 +79,9 @@ end
 
 * <code>:model</code> - **Required**, supply an instance of the model
 * <code>:group</code> - Optional, a heading to group similar models under on the index page, e.g. "Production", "In Development"
+* <code>:target_as_id</code> - Optional, causes the target name to be used for model page headings instead of the top-level model class name, 
+  e.g. "Eagle" instead of "MyApp::ModelA".  This is particularly useful if multiple targets instantiate the same top-level model with different
+  options or attributes that lead to differentiation.
 
 ## Website Integration
 
