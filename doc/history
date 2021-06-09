@@ -1,3 +1,15 @@
+<a class="anchor release_tag" name="v0_8_5"></a>
+<h1><a href="#v0_8_5">Tag: v0.8.5</a></h1>
+
+##### Branch: 'master'
+
+##### by Chris Hume on 09-Jun-2021 10:18AM
+
+
+Fix for Issue #21.  Update to allow for unique model documentation if multiple targets use
+the same top-level model.  This is enabled by setting the option :target_as_id to true in
+the generate_model_docs call.
+
 <a class="anchor release_tag" name="v0_8_4"></a>
 <h1><a href="#v0_8_4">Tag: v0.8.4</a></h1>
 
