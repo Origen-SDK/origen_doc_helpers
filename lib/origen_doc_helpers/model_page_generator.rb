@@ -43,12 +43,8 @@ module OrigenDocHelpers
         File.write(f, t)
       end
 
-      def index_page_template
-        if File.exist?("#{Origen.root}/app/")
-          @index_page_template ||= "#{Origen.root!}/app/templates/model_index.md.erb"
-        else
-          @index_page_template ||= "#{Origen.root!}/templates/model_index.md.erb"
-        end
+      def index_page_template # index page template is in doc helpers, which isn't using app/ dir
+        @index_page_template ||= "#{Origen.root!}/templates/model_index.md.erb"
       end
     end
 
@@ -168,12 +164,8 @@ module OrigenDocHelpers
       "models/#{id}"
     end
 
-    def model_page_template
-      if File.exist?("#{Origen.root}/app/")
-        @model_page_template ||= "#{Origen.root!}/app/templates/model_page.md.erb"
-      else
-        @model_page_template ||= "#{Origen.root!}/templates/model_page.md.erb"
-      end
+    def model_page_template # model page template is in doc helpers, which isn't using app/ dir
+      @model_page_template ||= "#{Origen.root!}/templates/model_page.md.erb"
     end
   end
 end
