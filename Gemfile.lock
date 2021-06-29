@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    origen_doc_helpers (0.8.5)
+    origen_doc_helpers (0.8.6)
       origen (>= 0.7.15)
 
 GEM
